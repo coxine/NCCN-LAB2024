@@ -5,8 +5,10 @@
 
 ## 规范
 
-- Commit Message格式：`Labx: yyy`，如：`Lab1: Static Router`
-- 文档语法格式类似Markdown，参照我做的lab1的pdf来写
+- Commit Message：`Labx: yyy`，如：`Lab1: Static Router`
+- 文档语法：类似Markdown，参照我做的lab1的pdf来写
+- 文件夹：`Labx`
+- pkt文件：`labx-team7.pkt`
 
 ## Typst 相关
 
