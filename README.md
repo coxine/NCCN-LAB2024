@@ -12,6 +12,5 @@
 
 ## Typst 相关
 
-- 语法
 - [安装](https://github.com/typst-community/typst-install)
 - [Vscode插件支持](https://typst-doc-cn.github.io/docs/chinese/)
