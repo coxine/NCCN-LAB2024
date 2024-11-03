@@ -6,7 +6,7 @@
 #let instructor = "刘峰老师"
 #let semester = "2024 秋季学期"
 #let due_time = "2024-10-28"
-#let id = "华振翔 林桂超 王涵 张家浩 张屹峰 "
+#let id = "华振翔 林桂超 王涵 张家浩 张屹峰"
 
 #show: assignment_class.with(title, author, course_id, instructor, semester, due_time, id)
 

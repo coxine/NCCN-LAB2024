@@ -5,8 +5,8 @@
 #let course_id = "互联网计算"
 #let instructor = "刘峰老师"
 #let semester = "2024 秋季学期"
-#let due_time = "2024-11-3"
-#let id = "华振翔 林桂超 王涵 张家浩 张屹峰 "
+#let due_time = "2024-11-03"
+#let id = "华振翔 林桂超 王涵 张家浩 张屹峰"
 
 #show: assignment_class.with(title, author, course_id, instructor, semester, due_time, id)
 
@@ -65,7 +65,8 @@ RouterC(config-if)# exit
 
 == 检查连通性
 
-=== RouterA的路由表状况
+=== 检查RouterA的路由表
+
 注：以下命令与输出中的端口为Packet Tracer的版本。
 ```
 RouterA#show ip route
@@ -82,7 +83,7 @@ Gateway of last resort is not set
 C    192.168.10.0/24 is directly connected, Serial2/0
 ```
 
-=== 在RouterA上ping的结果
+=== 在RouterA上ping
 
 ```
 RouterA#ping 192.168.10.2 # 成功
@@ -128,7 +129,7 @@ RouterC(config-router)#network 192.168.20.0
 
 == 再次检查连通性
 
-=== 再次检查路由表(RouterA的)
+=== 再次检查RouterA的路由表
 
 ```
 RouterA#show ip route
@@ -146,9 +147,9 @@ C    192.168.10.0/24 is directly connected, Serial2/0
 R    192.168.20.0/24 [120/1] via 192.168.10.2, 00:00:03, Serial2/0
 ```
 
-此时增加了``` R    192.168.20.0/24 [120/1] via 192.168.10.2, 00:00:03, Serial2/0 ```这个RIP连接
+此时增加了`R  192.168.20.0/24 [120/1] via 192.168.10.2, 00:00:03, Serial2/0`这个RIP连接。
 
-=== 再次在RouterA上进行ping
+=== 再次在RouterA上ping
 
 ```
 RouteAr#ping 192.168.20.1
@@ -160,7 +161,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 59/60/62 ms
 
 ```
 
-此时 RouterA与RouterC可以ping通
+此时，RouterA与RouterC可以ping通。
 
 
 = 实验问题
@@ -171,59 +172,59 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 59/60/62 ms
   具体内容在第二次检查RouterA的路由表中有展现。
 ]
 
-#cprob()[ 在路由器的全局模式下用“show ip protocol”检查当前时间参数设置，所显示的时间值分别代表什么？
+#cprob()[在路由器的全局模式下用`show ip protocol`检查当前时间参数设置，所显示的时间值分别代表什么？
 ][
-  在RouterA上进行``` show ip protocol ```指令,显示结果如下
+  在RouterA上进行`show ip protocol`指令,显示结果如下
   ```
-RouterA#show ip protocol
-Routing Protocol is "rip"
-Sending updates every 30 seconds, next due in 18 seconds
-Invalid after 180 seconds, hold down 180, flushed after 240
-Outgoing update filter list for all interfaces is not set
-Incoming update filter list for all interfaces is not set
-Redistributing: rip
-Default version control: send version 1, receive any version
-  Interface             Send  Recv  Triggered RIP  Key-chain
-  Serial2/0             1     2 1   
-Automatic network summarization is in effect
-Maximum path: 4
-Routing for Networks:
-	192.168.10.0
-Passive Interface(s):
-Routing Information Sources:
-	Gateway         Distance      Last Update
-	192.168.10.2         120      00:00:11
-Distance: (default is 120)
+  RouterA#show ip protocol
+  Routing Protocol is "rip"
+  Sending updates every 30 seconds, next due in 18 seconds
+  Invalid after 180 seconds, hold down 180, flushed after 240
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  Redistributing: rip
+  Default version control: send version 1, receive any version
+    Interface             Send  Recv  Triggered RIP  Key-chain
+    Serial2/0             1     2 1
+  Automatic network summarization is in effect
+  Maximum path: 4
+  Routing for Networks:
+  	192.168.10.0
+  Passive Interface(s):
+  Routing Information Sources:
+  	Gateway         Distance      Last Update
+  	192.168.10.2         120      00:00:11
+  Distance: (default is 120)
   ```
 
-- ``` Sending updates every 30 seconds ```: 这表示路由器每30秒发送一次路由更新信息。这是RIP（路由信息协议）的默认更新间隔。
+  - `Sending updates every 30 seconds`: 这表示路由器每30秒发送一次路由更新信息。这是RIP（路由信息协议）的默认更新间隔。
 
-- ``` next due in 18 seconds ```: 这表示下一个路由更新将在18秒后发送。这是一个倒计时，显示了距离下次更新的剩余时间。
+  - `next due in 18 seconds`: 这表示下一个路由更新将在18秒后发送。这是一个倒计时，显示了距离下次更新的剩余时间。
 
-- ``` Invalid after 180 seconds ```: 这表示如果在180秒内没有收到某个路由的更新信息，该路由将被标记为无效。
+  - `Invalid after 180 seconds`: 这表示如果在180秒内没有收到某个路由的更新信息，该路由将被标记为无效。
 
-- ``` hold down 180 ```: 这表示在路由被标记为无效后，路由器将进入保持状态，持续180秒。在此期间，路由器不会接受任何关于该路由的更新信息，以防止路由环路。
+  - `hold down 180`: 这表示在路由被标记为无效后，路由器将进入保持状态，持续180秒。在此期间，路由器不会接受任何关于该路由的更新信息，以防止路由环路。
 
-- ``` flushed after 240 ```: 这表示如果在240秒内仍未收到更新，该路由将被完全删除（flush）出路由表。
+  - `flushed after 240`: 这表示如果在240秒内仍未收到更新，该路由将被完全删除（flush）出路由表。
 ]
 
-#cprob()[ 观察网络路由路径的选择
+#cprob()[观察网络路由路径的选择
 ][
-  对于RouterA来说,从```192.168.10.1```连接到```192.168.10.2```,然后通过RIP,连接到```192.168.20.2```,最后连接到```192.168.20.1```。
+  对于RouterA来说,从`192.168.10.1`连接到`192.168.10.2`,然后通过RIP,连接到`192.168.20.2`,最后连接到`192.168.20.1`。
 ]
 
-#cprob()[ 在路由器的全局模式下，“traceroute”命令可用来追踪数据包在网络上所经过的路由。可选择若干条有代表性的路径进行路由选择的跟踪，并将由源到目标
-的各路径的结果记录下来。
+#cprob()[在路由器的全局模式下，`traceroute`命令可用来追踪数据包在网络上所经过的路由。可选择若干条有代表性的路径进行路由选择的跟踪，并将由源到目标
+  的各路径的结果记录下来。
 ][
   (在RouterA上进行操作)
-```
-Router#traceroute 192.168.20.1
-Type escape sequence to abort.
-Tracing the route to 192.168.20.1
+  ```
+  Router#traceroute 192.168.20.1
+  Type escape sequence to abort.
+  Tracing the route to 192.168.20.1
 
-  1   192.168.10.2    27 msec   31 msec   30 msec   
-  2   192.168.20.1    62 msec   48 msec   64 msec   
-```
+    1   192.168.10.2    27 msec   31 msec   30 msec
+    2   192.168.20.1    62 msec   48 msec   64 msec
+  ```
 ]
 
 = 实验收获

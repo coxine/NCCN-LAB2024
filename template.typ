@@ -1,7 +1,7 @@
 #import "@preview/numblex:0.1.1": numblex, circle_numbers
 #import "@preview/indenta:0.0.3": fix-indent
 
-#let font = (main: "Noto Serif", mono: "Fira Code", cjk: "Noto SERIF CJK SC")
+#let font = (main: "Noto Serif", mono: "Fira Code", cjk: "Noto Serif CJK SC")
 
 #let problem_counter = counter("problem")
 #let prob-solution_counter = counter("prob-solution")
