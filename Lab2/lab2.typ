@@ -28,6 +28,7 @@
 ```
 Router> enable # 进入特权模式
 Router# configure terminal # 进入全局配置模式
+Router(config)# hostname RouterA # 修改路由器名
 RouterA(config)# interface s0/1/0 # 配置连接RouterB的端口
 # 注：在Packet Tracer中，s0/1/0口对应的是Serial2/0
 RouterA(config-if)# ip address 192.168.10.1 255.255.255.0
@@ -65,9 +66,9 @@ RouterC(config-if)# exit
 == 检查连通性
 
 === RouterA的路由表状况
-
+注：以下命令与输出中的端口为Packet Tracer的版本。
 ```
-Router#show ip route
+RouterA#show ip route
 Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
        D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
        N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
@@ -81,24 +82,24 @@ Gateway of last resort is not set
 C    192.168.10.0/24 is directly connected, Serial2/0
 ```
 
-=== RouterA的ping的结果
+=== 在RouterA上ping的结果
 
 ```
-Router#ping 192.168.10.2 # 成功
+RouterA#ping 192.168.10.2 # 成功
 
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 192.168.10.2, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 25/30/32 ms
 
-Router#ping 192.168.20.2 # 失败
+RouterA#ping 192.168.20.2 # 失败
 
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 192.168.20.2, timeout is 2 seconds:
 .....
 Success rate is 0 percent (0/5)
 
-Router#ping 192.168.20.1 # 失败
+RouterA#ping 192.168.20.1 # 失败
 
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 192.168.20.1, timeout is 2 seconds:
@@ -110,19 +111,19 @@ Success rate is 0 percent (0/5)
 
 === RouterA
 ```
-Router(config)#router rip
-Router(config-router)#network 192.168.10.0
+RouterA(config)#router rip
+RouterA(config-router)#network 192.168.10.0
 ```
 === RouterB
 ```
-Router(config)#router rip
-Router(config-router)#network 192.168.10.0
-Router(config-router)#network 192.168.20.0
+RouterB(config)#router rip
+RouterB(config-router)#network 192.168.10.0
+RouterB(config-router)#network 192.168.20.0
 ```
 === RouterC
 ```
-Router(config)#router rip
-Router(config-router)#network 192.168.20.0
+RouterC(config)#router rip
+RouterC(config-router)#network 192.168.20.0
 ```
 
 == 再次检查连通性
@@ -130,7 +131,7 @@ Router(config-router)#network 192.168.20.0
 === 再次检查路由表(RouterA的)
 
 ```
-Router#show ip route
+RouterA#show ip route
 Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
        D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
        N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
@@ -145,12 +146,12 @@ C    192.168.10.0/24 is directly connected, Serial2/0
 R    192.168.20.0/24 [120/1] via 192.168.10.2, 00:00:03, Serial2/0
 ```
 
-此时增加了"R    192.168.20.0/24 [120/1] via 192.168.10.2, 00:00:03, Serial2/0"这RIP连接
+此时增加了``` R    192.168.20.0/24 [120/1] via 192.168.10.2, 00:00:03, Serial2/0 ```这个RIP连接
 
 === 再次在RouterA上进行ping
 
 ```
-Router#ping 192.168.20.1
+RouteAr#ping 192.168.20.1
 
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 192.168.20.1, timeout is 2 seconds:
@@ -164,17 +165,17 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 59/60/62 ms
 
 = 实验问题
 
-#cprob()[在配置结束后用什么命令来查看具体的设置,请显示具体内容。
+#cprob()[在配置结束后用什么命令来查看具体的设置，请显示具体内容。
 ][
-  使用show ip route,显示的内容中以"R"作为识别的即为RIP连接
+  使用show ip route，显示的内容中以"R"作为识别的即为RIP连接
   具体内容在第二次检查RouterA的路由表中有展现。
 ]
 
 #cprob()[ 在路由器的全局模式下用“show ip protocol”检查当前时间参数设置，所显示的时间值分别代表什么？
 ][
-  在RouterA上进行show ip protocol指令,显示结果如下
+  在RouterA上进行``` show ip protocol ```指令,显示结果如下
   ```
-  Router#show ip protocol
+RouterA#show ip protocol
 Routing Protocol is "rip"
 Sending updates every 30 seconds, next due in 18 seconds
 Invalid after 180 seconds, hold down 180, flushed after 240
@@ -195,25 +196,24 @@ Routing Information Sources:
 Distance: (default is 120)
   ```
 
-Sending updates every 30 seconds: 这表示路由器每30秒发送一次路由更新信息。这是RIP（路由信息协议）的默认更新间隔。
+- ``` Sending updates every 30 seconds ```: 这表示路由器每30秒发送一次路由更新信息。这是RIP（路由信息协议）的默认更新间隔。
 
-next due in 18 seconds: 这表示下一个路由更新将在18秒后发送。这是一个倒计时，显示了距离下次更新的剩余时间。
+- ``` next due in 18 seconds ```: 这表示下一个路由更新将在18秒后发送。这是一个倒计时，显示了距离下次更新的剩余时间。
 
-Invalid after 180 seconds: 这表示如果在180秒内没有收到某个路由的更新信息，该路由将被标记为无效。
+- ``` Invalid after 180 seconds ```: 这表示如果在180秒内没有收到某个路由的更新信息，该路由将被标记为无效。
 
-hold down 180: 这表示在路由被标记为无效后，路由器将进入保持状态，持续180秒。在此期间，路由器不会接受任何关于该路由的更新信息，以防止路由环路。
+- ``` hold down 180 ```: 这表示在路由被标记为无效后，路由器将进入保持状态，持续180秒。在此期间，路由器不会接受任何关于该路由的更新信息，以防止路由环路。
 
-flushed after 240: 这表示如果在240秒内仍未收到更新，该路由将被完全删除（flush）出路由表。
+- ``` flushed after 240 ```: 这表示如果在240秒内仍未收到更新，该路由将被完全删除（flush）出路由表。
 ]
 
 #cprob()[ 观察网络路由路径的选择
 ][
-  对于RouterA来说,从192.168.10.1连接到192.168.10.2,然后通过RIP,连接到192.168.20.2,最后连接到192.168.20.1
+  对于RouterA来说,从```192.168.10.1```连接到```192.168.10.2```,然后通过RIP,连接到```192.168.20.2```,最后连接到```192.168.20.1```。
 ]
 
 #cprob()[ 在路由器的全局模式下，“traceroute”命令可用来追踪数据包在网络上所经过的路由。可选择若干条有代表性的路径进行路由选择的跟踪，并将由源到目标
-的各路径的结果记录下来。下表可作为参考格式：
-路径编号 源 IP 中间节点 1 中间节点 2 中间节点 3 中间节点 4 目的 IP
+的各路径的结果记录下来。
 ][
   (在RouterA上进行操作)
 ```
@@ -229,7 +229,7 @@ Tracing the route to 192.168.20.1
 = 实验收获
 
 1. 巩固了路由端口的配置：
-  - 温习了在上次实验中学习的对于路由端口的配置
+  - 温习了在上次实验中学习的对于路由端口的配置。
 2. RIP动态路由配置：
   - 掌握了动态路由的配置方法，包括如何为每台路由器添加RIP的network配置。
   - 通过配置动态路由，成功实现了Router和RouterC之间的互联。
