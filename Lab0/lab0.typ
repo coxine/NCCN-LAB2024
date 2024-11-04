@@ -1,4 +1,4 @@
-#import "template.typ": *
+#import "../template.typ": *
 
 #let title = "基础操作速查"
 #let author = "第7组"
