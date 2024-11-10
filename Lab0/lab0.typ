@@ -25,6 +25,8 @@
 Router> enable # 进入特权模式
 Router# configure terminal # 进入全局配置模式
 
+Router# terminal length 0 # 设置终端显示不分页
+
 # 修改路由器名
 Router(config)# hostname \<name\>
 
@@ -58,6 +60,63 @@ Router(config)# ip route 0.0.0.0 0.0.0.0 \<next-hop\>
 Router(config)# router rip
 Router(config-router)# network \<network\>
 Router(config-router)# exit
+```
+
+== 环回接口
+
+```
+Router(config)# interface loopback 0 # 进入环回接口配置模式
+Router(config-if)# ip address \<ip\> \<mask\> # 配置环回接口IP地址
+Router(config-if)# no shutdown # 开启环回接口
+Router(config-if)# exit # 退出环回接口配置模式
+```
+
+== OSPF
+
+```
+Router(config)# router ospf 1 # 进入OSPF配置模式
+Router(config-router)# network \<network\> \<mask\> area \<area\> # 配置OSPF网络
+Router(config-router)# exit # 退出OSPF配置模式
+Router(config)# show ip ospf neighbor # 查看OSPF邻居
+```
+
+=== OSPF计时器
+
+```
+#定义 OSPF 路由器之间发送 "Hello" 数据包的时间间隔
+Router(config-if)#ip ospf hello-interval 5
+
+#定义 OSPF 路由器在多长时间内未接收到邻居的 Hello 包时，认为邻居不可达
+RouterA(config-if)#ip ospf dead-interval 20
+```
+
+=== OSPF认证
+
+```
+#启用接口上的 MD5 认证密钥
+Router(config-if)#ip ospf message-digest-key 1 md5 7 \<itsasecret\>
+
+#启用区域的消息摘要认证
+Router(config-router)#area 0 authentication message-digest
+
+```
+
+== 显示情况
+
+```
 # 显示路由表
 Router# show ip route
+
+# 显示接口信息
+Router# show ip protocols
+
+# 显示OSPF信息
+Router# show ip ospf
+
+# 查看DR和BDR
+Router# show ip ospf interface
 ```
+
+= 交换机
+
+- 在开启交换机时，需先用电脑连交换机Console口，输入`no`跳过默认配置，不然交换机无法启动。
