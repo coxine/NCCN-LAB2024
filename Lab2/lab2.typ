@@ -68,6 +68,7 @@ RouterC(config-if)# exit
 === 检查RouterA的路由表
 
 注：以下命令与输出中的端口为Packet Tracer的版本。
+
 ```
 RouterA#show ip route
 Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP

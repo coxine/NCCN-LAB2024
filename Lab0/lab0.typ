@@ -23,12 +23,11 @@
 
 ```
 Router> enable # 进入特权模式
-Router# configure terminal # 进入全局配置模式
-
 Router# terminal length 0 # 设置终端显示不分页
 
-# 修改路由器名
-Router(config)# hostname \<name\>
+
+Router# configure terminal # 进入全局配置模式
+Router(config)# hostname \<name\> # 修改路由器名
 
 # 进入控制台配置模式
 Router(config)#line con 0
