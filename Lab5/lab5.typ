@@ -173,13 +173,11 @@ NAT: expiring 200.1.1.253 (192.168.1.2) icmp 20 (20)
 
 == 模拟器不适配
 
-后续的辅助地址相关操作以及PAT配置操作由于Parket tracer模拟器不支持
-    -ip address IP MASK secondary 的secondary参数
-    -ip nat pool nju IP1 IP2 prefix-length 24 的prefix-length参数
-所以未成功在模拟器中实现。
-也因此无法展示终端信息。
+后续的辅助地址相关操作以及PAT配置操作由于Parket tracer模拟器不支持:
+- `-ip address IP MASK secondary`的`secondary`参数
+- `-ip nat pool nju IP1 IP2 prefix-length 24` 的`prefix-length`参数
+所以未成功在模拟器中实现，也因此无法展示终端信息。
 
-= 拓展问题
 
 = 实验收获
 

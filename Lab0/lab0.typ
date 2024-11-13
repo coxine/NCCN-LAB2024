@@ -25,7 +25,6 @@
 Router> enable # 进入特权模式
 Router# terminal length 0 # 设置终端显示不分页
 
-
 Router# configure terminal # 进入全局配置模式
 Router(config)# hostname \<name\> # 修改路由器名
 
@@ -42,6 +41,7 @@ Router(config)#no ip domain-lookup
 ```
 Router(config)# interface s0/1/0 # 进入接口配置模式
 Router(config-if)# ip address \<ip\> \<mask\> # 配置接口IP地址
+Router(config-if)# ip address \<ip\> \<mask\> secondary # 配置接口第二IP地址 (可配置多个)
 Router(config-if)# no shutdown # 开启接口
 Router(config-if)# exit # 退出接口配置模式
 ```
@@ -98,6 +98,13 @@ Router(config-if)#ip ospf message-digest-key 1 md5 7 \<itsasecret\>
 #启用区域的消息摘要认证
 Router(config-router)#area 0 authentication message-digest
 
+```
+
+== NAT
+
+```
+#debug
+Router#debug ip nat ha
 ```
 
 == 显示情况
