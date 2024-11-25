@@ -20,7 +20,6 @@
 
 == 基本操作
 
-
 ```
 Router> enable # 进入特权模式
 Router# terminal length 0 # 设置终端显示不分页
@@ -35,6 +34,26 @@ Router(config-line)#logging synchronous
 # 关闭浪费时间的域名解析
 Router(config)#no ip domain-lookup
 ```
+
+== 去除密码
+
+```
+Router# enable # 进入特权模式
+Router# configure terminal # 进入全局配置模式
+Router(config)# no enable password # 去除特权密码
+Router(config)# no enable secret # 去除特权密码
+Router(config)# line con 0 # 进入控制台配置模式
+Router(config-line)# no password # 去除控制台密码
+Router(config-line)# no login # 去除控制台登录
+Router(config-line)# exit # 退出控制台配置模式
+Router(config)# line vty 0 4 # 进入虚拟终端配置模式
+Router(config-line)# no password # 去除虚拟终端密码
+Router(config-line)# no login # 去除虚拟终端登录
+Router(config-line)# exit # 退出虚拟终端配置模式
+Router(config)# exit # 退出全局配置模式
+Router# write memory # 保存配置
+```
+
 
 == 配置IP
 
@@ -126,3 +145,13 @@ Router# show ip ospf interface
 = 交换机
 
 - 在开启交换机时，需先用电脑连交换机Console口，输入`no`跳过默认配置，不然交换机无法启动。
+
+= 故障Checklist
+
+== 无法ping通
+
+- 检查网线是否插好 指示灯是否亮
+- 检查网关是否设置正确
+- 路由器/交换机`show ip route`查看路由表
+- `show ip interface brief`查看接口状态
+- 求助助教
