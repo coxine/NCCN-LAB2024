@@ -1,6 +1,6 @@
 #import "../../template.typ": *
 
-#let title = "组会1 会议议题&纪要"
+#let title = "组会1"
 #let author = "第7组"
 #let course_id = "互联网计算"
 #let instructor = "刘峰老师"
