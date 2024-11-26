@@ -1,6 +1,6 @@
 #import "../template.typ": *
 
-#let title = "Lab7 VALN间路由 "
+#let title = "Lab4 VALN间路由 "
 #let author = "第7组"
 #let course_id = "互联网计算"
 #let instructor = "刘峰老师"
@@ -20,31 +20,34 @@
 
 = 网络拓扑
 
-#image("lab6.png")
+#image("lab4.png")
 
-上图中：`PC0`和`PC2`属于`Vlan 10`， `PC1`和`PC3`属于`Vlan20`
+上图中：`PC0`和`PC2`属于`Vlan 10`， `PC1`和`PC3`属于`Vlan 20`
 
 = 实验内容
 
 == 根据网络拓扑图连接好设备
 #table(
-  align:center,
+  align: center,
   columns: 5,
   rows: 4,
-    [],[PC0],[PC1],[PC2],[PC3],
-    [IP地址],[192.168.10.2],[192.168.20.2],[192.168.10.3],[192.168.20.3],
-    [子网掩码],[255.255.255.0],[255.255.255.0],[255.255.255.0],[255.255.255.0],
-    [默认网关],[192.168.10.1],[192.168.20.1],[192.168.10.1],[192.168.20.1],
+  [], [PC0], [PC1], [PC2], [PC3],
+  [IP地址], [192.168.10.2], [192.168.20.2], [192.168.10.3], [192.168.20.3],
+  [子网掩码], [255.255.255.0], [255.255.255.0], [255.255.255.0], [255.255.255.0],
+  [默认网关], [192.168.10.1], [192.168.20.1], [192.168.10.1], [192.168.20.1],
 )
 
 == 将`Switch1`和`Switch2`之间的链路设置为`Trunk`链路
 使用`g1/0/24`接口作为连接两个Switch的接口
+
 === `Switch1`
+
 ```
 Switch1(config)# interface g1/0/24
 Switch1(config-if)# switchport mode trunk
 ```
 === `Switch2`
+
 ```
 Switch2(config)# interface g1/0/24
 Switch2(config-if)# switchport mode trunk
@@ -52,7 +55,7 @@ Switch2(config-if)# switchport mode trunk
 
 == 划分两个`Vlan`，将对应的PC划分到对应`Vlan`
 
-=== 划分两个`Vlan` 
+=== 划分两个`Vlan`
 ```
 Switch1(config)# vlan 10
 Switch2(config)# vlan 20
@@ -68,7 +71,7 @@ Switch1(config-if)# switchport mode access
 Switch1(config-if)# switchport access vlan 10
 
 Switch1(config)# int g1/0/2
-switch1(config-if)# switchport mode access 
+switch1(config-if)# switchport mode access
 Switch1(config-if)# switchport access vlan 20
 ```
 
@@ -83,7 +86,7 @@ Switch2(config-if)# switchport mode access
 Switch2(config-if)# switchport access vlan 10
 
 Switch2(config)# int g1/0/2
-switch2(config-if)# switchport mode access 
+switch2(config-if)# switchport mode access
 Switch2(config-if)# switchport access vlan 20
 ```
 
@@ -127,7 +130,7 @@ Router(config-if)# ip address 192.168.20.1 255.255.255.0
 = 实验中遇到的问题及解决方法
 
 == `Vlan`测试通过，但是`Router`的网关测试不通过
-`Switch`的接口是纵向排布，但是我们以为是横向排布。导致`PC`一直分别接在`g1/0/1`和`g1/0/3`，但是配置`Vlan`的时候以为是`g1/0/1`和`g1/0/2`，导致`Vlan 20`从来就是不存在的，所以能通过`Vlan`的隔离测试，但是不能通过网关测试。正确调整接口位置便解决
+`Switch`的接口是纵向排布，但是我们以为是横向排布。导致`PC`一直分别接在`g1/0/1`和`g1/0/3`，但是配置`Vlan`的时候以为是`g1/0/1`和`g1/0/2`，导致`Vlan 20`从来就是不存在的，所以能通过`Vlan`的隔离测试，但是不能通过网关测试。正确调整接口位置便解决。感谢火眼金睛的助教老师！！
 
 = 实验收获
 
