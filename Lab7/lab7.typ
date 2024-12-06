@@ -52,9 +52,9 @@ RouterB(config-if)# ppp pap sent-username adsf password adsf
 RouterB(config-if)# exit
 RouterB(config)# exit
 RouterB# ping 192.168.1.1
-Type escape sequence to abort. 
-Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds: 
-..... 
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+.....
 Success rate is 0 percent (0/5)
 # ping失败
 
@@ -63,10 +63,10 @@ RouterB(config)# interface s0/1/0
 RouterB(config-if)# ppp pap sent-username nju password ccna #设置正确的用户名和密码
 RouterB(config-if)# end
 RouterB# ping 192.168.1.1
-Type escape sequence to abort. 
-Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds: 
-!!!!! 
-Success rate is 100 percent (5/5), round-trip min/avg/max = 28/28/32 ms 
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 28/28/32 ms
 # ping 成功
 ```
 == CHAP验证
@@ -74,56 +74,56 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 28/28/32 ms
 === RouterA
 
 ```
-RouterA(config)#username nju2 password ccna 
-RouterA(config)#interface s0/1/0 
-RouterA(config-if)#ip address 192.168.1.1 255.255.255.0 
-RouterA(config-if)#encapsulation ppp 
-RouterA(config-if)#ppp authentication chap 
-RouterA(config-if)#no shutdown 
+RouterA(config)#username nju2 password ccna
+RouterA(config)#interface s0/1/0
+RouterA(config-if)#ip address 192.168.1.1 255.255.255.0
+RouterA(config-if)#encapsulation ppp
+RouterA(config-if)#ppp authentication chap
+RouterA(config-if)#no shutdown
 
 ```
 
 === RouterB
 
 ```
-RouterB(config)#int s0/1/0 
-RouterB(config-if)#ip address 192.168.1.2 255.255.255.0 
-RouterB(config-if)#encapsulation ppp 
-RouterB(config-if)#ppp authentication chap 
-RouterB(config-if)#no shutdown 
-RouterB(config)#username nju1 password ccnp 
-RouterB#ping 192.168.1.1 
-Type escape sequence to abort. 
-Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds: 
-..... 
+RouterB(config)#int s0/1/0
+RouterB(config-if)#ip address 192.168.1.2 255.255.255.0
+RouterB(config-if)#encapsulation ppp
+RouterB(config-if)#ppp authentication chap
+RouterB(config-if)#no shutdown
+RouterB(config)#username nju1 password ccnp
+RouterB#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+.....
 Success rate is 0 percent (0/5)
 # ping失败
-RouterB(config)#username nju1 password ccna #设置正确的用户名和密码 
-RouterB#ping 192.168.1.1 
-Type escape sequence to abort. 
-Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds: 
-!!!!! 
-Success rate is 100 percent (5/5), round-trip min/avg/max = 28/28/32 ms 
+RouterB(config)#username nju1 password ccna #设置正确的用户名和密码
+RouterB#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 28/28/32 ms
 # ping 成功
-RouterB(config)#username RouterA password ccnp 
+RouterB(config)#username RouterA password ccnp
 RouterB#ping 192.168.1.1
 ```
-== 在验证通过的情况下，将任意一边的口令随意设置成一个非ccna 的口令，再测试
-连通性
+== 在验证通过的情况下，将任意一边的口令随意设置成一个非ccna 的口令，再测试连通性
+
 ```
-RouterB(config)#username RouterA password ccnp 
-RouterB#ping 192.168.1.1 
-Type escape sequence to abort. 
-Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds: 
-!!!!! 
-Success rate is 100 percent (5/5), round-trip min/avg/max = 28/28/32 ms 
-ping 成功
+RouterB(config)#username RouterA password ccnp
+RouterB#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 28/28/32 ms
+# ping 成功
 ```
 
 
 = 实验收获
 
-1.学会启用PPP封装协议
-2.学会启用PAP身份验证,尝试正确与错误的验证方法
-3.学会设置被验证发送的用户名和口令
-4.了解学习CHAP认证协议,尝试正确与错误的认证协议
+1. 学会启用PPP封装协议
+2. 学会启用PAP身份验证,尝试正确与错误的验证方法
+3. 学会设置被验证发送的用户名和口令
+4. 了解学习CHAP认证协议,尝试正确与错误的认证协议
