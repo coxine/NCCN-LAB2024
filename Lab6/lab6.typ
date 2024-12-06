@@ -122,9 +122,9 @@ Success rate is 0 percent (0/5)
 
 == 使用ACL禁止RouterA到RouterB的TELNET应用
 
-# 方法一：使用扩展ACL
+=== 方法一：使用扩展ACL
 
-=== RouterB
+==== RouterB
 
 ```
 #清除先前的配置
@@ -133,7 +133,7 @@ RouterB(config)#interface serial 2/0
 RouterB(config-if)#no ip access-group 100 in
 ```
 
-=== RouterB
+==== RouterB
 
 ```
 RouterB(config)#enable secret nju
@@ -142,7 +142,7 @@ RouterB(config-line)#password cisco
 RouterB(config-line)#login
 ```
 
-=== RouterA
+==== RouterA
 
 ```
 RouterA#ping 192.168.1.2
@@ -158,11 +158,11 @@ Trying 192.168.1.2 ...Open
 
 User Access Verification
 
-Password: 
+Password:
 RouterB> # 在此处从RouterA上通过telnet连接到了RouterB的控制台
 ```
 
-=== RouterB
+==== RouterB
 
 ```
 RouterB(config)#access-list 101 deny tcp host 192.168.1.1 any eq 23
@@ -171,7 +171,7 @@ RouterB(config)#interface serial 2/0
 RouterB(config-if)#ip access-group 101 in
 ```
 
-=== RouterA
+==== RouterA
 
 ```
 RouterA#telnet 192.168.1.2
@@ -187,18 +187,18 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 21/29/32 ms
 # telnet被拒绝但ping成功
 ```
 
-# 方法二：使用标准ACL
+=== 方法二：使用标准ACL
 
-=== RouterB
+==== RouterB
 
 ```
 # 清除先前的配置
 
 RouterB(config)#interface serial 2/0
-RouterB(config-if)#no ip access-group 101 in 
+RouterB(config-if)#no ip access-group 101 in
 ```
 
-=== RouterB
+==== RouterB
 
 ```
 RouterB(config)#access-list 1 deny host 192.168.1.1
@@ -207,7 +207,7 @@ RouterB(config)#line vty 0 4
 RouterB(config-line)#access-class 1 in
 ```
 
-=== RouterA
+==== RouterA
 
 ```
 RouterA#telnet 192.168.1.2
