@@ -51,7 +51,7 @@
 = 网络拓扑
 
 
-#image("final.png")
+#image("./Final.png")
 
 = 实验步骤
 
