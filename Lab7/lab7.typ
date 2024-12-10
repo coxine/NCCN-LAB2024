@@ -19,6 +19,8 @@
 
 #image("lab7.png")
 
+上图中：`PC0`和`PC2`属于`Vlan 10`， `PC1`和`PC3`属于`Vlan20`
+
 = 实验内容
 
 == PAP验证
