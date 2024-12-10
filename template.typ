@@ -97,7 +97,6 @@
   region: "cn",
   body,
 ) = {
-
   set text(font: (font.main, font.cjk), size: size, lang: lang, region: region)
 
   set heading(numbering: numblex("一、", "1.", "(1)"))
@@ -123,7 +122,8 @@
     if elms.len() > 1 {
       // If there are at least 2
       let previous_heading = elms.at(-2) // Take the previous one
-      if ( // If it is close enough to the current one
+      if (
+        // If it is close enough to the current one
         previous_heading.location().position().y + 35pt > current.location().position().y
       ) {
         return [#v(-0.3em) #current]
@@ -131,7 +131,6 @@
     }
     return current
   })
-
 
 
   set raw(tab-size: 4)
