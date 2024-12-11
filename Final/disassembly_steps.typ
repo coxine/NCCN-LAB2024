@@ -288,13 +288,14 @@
   [在 PC-B-Back 初始化超级终端并配置 Router-B-Down], [2B],
 )
 
-== 验证&冗余 - 1.5min
+== 验证&冗余 - 0.5min
+- 取最长的拓扑链路证明中途RIP的完整性
 
 #table(
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [TODO],
+  [PC-A-Back 可以 `ping` 通 PC-B-Mid ], [2A]
 )
 
 = NAT - 3min
