@@ -58,7 +58,7 @@
   [指挥、开启所有交换机、路由器], [M],
   [开电脑], [1A],
   [准备5根Console线 2根放旁边], [1B],
-  [准备7根网线 1根放旁边], [2A],
+  [准备5根直通线 2根交叉线], [2A],
   [准备4根串口线 若未准备完成可在第4步继续], [2B],
 )
 
@@ -88,13 +88,13 @@
   [1B],
 
   [
-    1. 连接Console线：Router-A-Mid <==> PC-A-Mid
-    2. 连接Console线：Switch-A <==> PC-A-Front
+    1. 连接Console线：Router-A-Up <==> PC-A-Front
+    2. 连接Console线：Switch-A <==> PC-A-Mid
   ],
   [2A],
 
   [
-    1. 连接Console线：Switch-B <==> PC-B-Front
+    1. 连接Console线：Switch-B <==> PC-B-Mid
   ],
   [2B],
 )
@@ -126,8 +126,8 @@
   table.header[*操作*][*人员*],
   [指挥], [M],
   [配置 Switch-A], [1A],
-  [配置 Router-A-Up], [1B],
-  [配置 Switch-B], [2A],
+  [配置 Router-A-Up], [2A],
+  [配置 Switch-B], [1B],
   [继续4根串口线], [2B],
 )
 
@@ -155,6 +155,7 @@
   [
     1. 连接串口线：Router-A-Up `s0/1/0` <==> Router-A-Mid `s0/1/0`
     2. 连接串口线：Router-A-Mid `s0/1/1` <==> Router-A-Down `s0/1/0`
+    3. 连接交叉线：Router-B-Up `g0/0/0` <==> PC-B-Mid
   ],
   [1A],
 
@@ -173,17 +174,16 @@
   [2A],
 
   [
-    1. 拔Console线：Switch-B <=/=> PC-B-Front
+    1. 拔Console线：Switch-B <=/=> PC-B-Mid
     2. 连接Console线：Router-B-Up <==> PC-B-Front
     3. 连接Console线：Router-B-Mid <==> PC-B-Mid
-    4. 连接网线：Router-B-Up `g0/0/0` <==> PC-B-Mid
   ],
   [2B],
 )
 
 == 输入命令 - 3min
 
-- 配置网络设备前须完成Router-A-Down - 4的初始化操作，详见checklist
+- 配置网络设备前须完成 Router-A-Mid、Router-A-Down、Router-B-Up、Router-B-Mid 的初始化操作，详见checklist
 
 #table(
   columns: (80%, 20%),
@@ -214,7 +214,7 @@
   align: (left, center),
   table.header[*操作*][*人员*],
   [指挥], [M],
-  [配置 Router-A-Down], [1A],
+  [配置 Router-A-Down], [2A],
   [配置 Router-B-Up], [1B],
 )
 

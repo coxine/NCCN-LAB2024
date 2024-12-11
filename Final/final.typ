@@ -105,6 +105,21 @@
 
 == 配置交换机 VLAN
 
+=== Switch0
+
+```shell
+Switch0(config)#vlan 10
+Switch0(config)#vlan 20
+Switch0(config)#interface g1/0/23
+Switch0(config-if)#switchport mode trunk
+Switch0(config)#interface g1/0/1
+Switch0(config-if)#switchport mode access
+Switch0(config-if)#switchport access vlan 10
+Switch0(config-if)#interface g1/0/2
+Switch0(config-if)#switchport mode access
+Switch0(config-if)#switchport access vlan 20
+```
+
 === Switch1
 
 ```shell
@@ -118,21 +133,6 @@ Switch1(config-if)#switchport access vlan 10
 Switch1(config-if)#interface g1/0/2
 Switch1(config-if)#switchport mode access
 Switch1(config-if)#switchport access vlan 20
-```
-
-=== Switch2
-
-```shell
-Switch2(config)#vlan 10
-Switch2(config)#vlan 20
-Switch2(config)#interface g1/0/23
-Switch2(config-if)#switchport mode trunk
-Switch2(config)#interface g1/0/1
-Switch2(config-if)#switchport mode access
-Switch2(config-if)#switchport access vlan 10
-Switch2(config-if)#interface g1/0/2
-Switch2(config-if)#switchport mode access
-Switch2(config-if)#switchport access vlan 20
 ```
 == 验证VLAN 配置情况
 
