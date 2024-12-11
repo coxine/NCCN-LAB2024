@@ -57,29 +57,37 @@
 
 == 初始化
 
-=== 接线
+
+=== 连接设备控制PC
 
 #table(
   columns: (40%, 15%, 15%, 15%, 15%),
   align: (center, center, center, center, center),
   table.header[*线型*][*设备A*][*端口A*][*设备B*][*端口B*],
-  [RS232-RJ45 翻转串口线], [Router0], [Console], [PC0], [USB],
-  [RS232-RJ45 翻转串口线], [Switch0], [Console], [PC1], [USB],
-  [RS232-RJ45 翻转串口线], [Router1], [Console], [PC2], [USB],
-  [RS232-RJ45 翻转串口线], [Switch1], [Console], [PC3], [USB],
-  [RS232-RJ45 翻转串口线], [Router2], [Console], [PC4], [USB],
-  [RS232-RJ45 翻转串口线], [Router3], [Console], [PC5], [USB],
-  [串口线], [Router0], [s0/1/0], [Router1], [s0/1/0],
-  [串口线], [Router1], [s0/1/1], [Router2], [s0/1/0],
-  [串口线], [Router2], [s0/1/1], [Router3], [s0/1/0],
-  [串口线], [Router3], [s0/1/1], [Router4], [s0/1/0],
-  [RJ45 直通线], [Switch0], [g1/0/1], [PC0], [NIC],
-  [RJ45 直通线], [Switch0], [g1/0/2], [PC1], [NIC],
-  [RJ45 直通线], [Switch1], [g1/0/1], [PC2], [NIC],
-  [RJ45 直通线], [Switch1], [g1/0/2], [PC3], [NIC],
-  [RJ45 直通线], [Router3], [g0/0/0], [PC4], [NIC],
-  [RJ45 直通线], [Switch1], [g1/0/23], [Switch0], [g1/0/23],
-  [RJ45 直通线], [Switch0], [g1/0/24], [Router0], [g0/0/0],
+  [RS232-RJ45 翻转串口线], [VlanController], [Console], [VLAN10PC1], [USB],
+  [RS232-RJ45 翻转串口线], [Switch1], [Console], [VLAN20PC1], [USB],
+  [RS232-RJ45 翻转串口线], [TransRouter12], [Console], [VLAN10PC2], [USB],
+  [RS232-RJ45 翻转串口线], [Switch2], [Console], [VLAN20PC2], [USB],
+  [RS232-RJ45 翻转串口线], [TransRouter23], [Console], [PC4], [USB],
+  [RS232-RJ45 翻转串口线], [FinalRouter], [Console], [PC5], [USB],
+)
+
+=== 连接设备
+#table(
+  columns: (40%, 15%, 15%, 15%, 15%),
+  align: (center, center, center, center, center),
+  table.header[*线型*][*设备A*][*端口A*][*设备B*][*端口B*],
+  [串口线], [VlanController], [s0/1/0], [TransRouter12], [s0/1/0],
+  [串口线], [TransRouter12], [s0/1/1], [TransRouter23], [s0/1/0],
+  [串口线], [TransRouter23], [s0/1/1], [FinalRouter], [s0/1/0],
+  [串口线], [FinalRouter], [s0/1/1], [OutsideRouter], [s0/1/0],
+  [RJ45 直通线], [Switch1], [g1/0/1], [VLAN10PC1], [NIC],
+  [RJ45 直通线], [Switch1], [g1/0/2], [VLAN20PC1], [NIC],
+  [RJ45 直通线], [Switch2], [g1/0/1], [VLAN10PC1], [NIC],
+  [RJ45 直通线], [Switch2], [g1/0/2], [VLAN20PC2], [NIC],
+  [RJ45 直通线], [Switch1], [g1/0/24], [VlanController], [g0/0/0],
+  [RJ45 交叉线], [FinalRouter], [g0/0/0], [PC4], [NIC],
+  [RJ45 交叉线], [Switch1], [g1/0/23], [Switch2], [g1/0/23],
 )
 
 === 配置PC
@@ -100,6 +108,8 @@
 === Switch1
 
 ```shell
+Switch1(config)#vlan 10
+Switch1(config)#vlan 20
 Switch1(config)#interface g1/0/23
 Switch1(config-if)#switchport mode trunk
 Switch1(config)#interface g1/0/1
@@ -113,149 +123,165 @@ Switch1(config-if)#switchport access vlan 20
 === Switch2
 
 ```shell
+Switch2(config)#vlan 10
+Switch2(config)#vlan 20
 Switch2(config)#interface g1/0/23
 Switch2(config-if)#switchport mode trunk
-Switch1(config)#interface g1/0/1
-Switch1(config-if)#switchport mode access
-Switch1(config-if)#switchport access vlan 10
-Switch1(config-if)#interface g1/0/2
-Switch1(config-if)#switchport mode access
-Switch1(config-if)#switchport access vlan 20
+Switch2(config)#interface g1/0/1
+Switch2(config-if)#switchport mode access
+Switch2(config-if)#switchport access vlan 10
+Switch2(config-if)#interface g1/0/2
+Switch2(config-if)#switchport mode access
+Switch2(config-if)#switchport access vlan 20
 ```
+== 验证VLAN 配置情况
+
+- VLAN10PC1、VLAN10PC2可`ping`通。
+- VLAN20PC1、VLAN20PC2可`ping`通。
+- 分属VLAN10和VLAN20的PC不可`ping`通。
 
 == 配置VLAN Trunk
 
 === Switch0
 
 ```shell
-Switch0(config)#interface g1/0/24
-Switch0(config-if)#switchport mode trunk
+Switch1(config)#interface g1/0/24
+Switch1(config-if)#switchport mode trunk
 ```
 
-=== Router0
+=== VlanController
 
 ```shell
-Router0(config)#interface g0/0/0
-Router0(config-if)#no ip address
-Router0(config-if)#no shutdown
-Router0(config)#int g0/0/0.10
-Router0(config-if)#encapsulation dot1q 10
-Router0(config-if)#ip address 192.168.10.1 255.255.255.0
-Router0(config)#int g0/0/0.20
-Router0(config-if)#encapsulation dot1q 20
-Router0(config-if)#ip address 192.168.20.1 255.255.255.0
+VlanController(config)#interface g0/0/0
+VlanController(config-if)#no ip address
+VlanController(config-if)#no shutdown
+VlanController(config)#int g0/0/0.10
+VlanController(config-if)#encapsulation dot1q 10
+VlanController(config-if)#ip address 192.168.10.1 255.255.255.0
+VlanController(config)#int g0/0/0.20
+VlanController(config-if)#encapsulation dot1q 20
+VlanController(config-if)#ip address 192.168.20.1 255.255.255.0
 ```
 
-== 验证VLAN 配置情况
+== 验证VLAN 连通情况
 
-- 此时PC0、PC1、PC2、PC3均可互相`ping`通。
+- VLAN10PC1、VLAN10PC2、VLAN20PC1、VLAN20PC2均可`ping`通。
 
 
 == 配置路由器 RIP
 
-=== Router0
+=== VlanController
 
 ```shell
-Router0(config)#interface s0/1/0
-Router0(config-if)#ip address 200.1.1.1 255.255.255.0
-Router0(config-if)#no shutdown
-Router0(config)#router rip
-Router0(config-router)#network 192.168.10.0
-Router0(config-router)#network 192.168.20.0
-Router0(config-router)#network 200.1.1.0
+VlanController(config)#interface s0/1/0
+VlanController(config-if)#ip address 200.1.1.1 255.255.255.0
+VlanController(config-if)#no shutdown
+VlanController(config)#router rip
+VlanController(config-router)#network 192.168.10.0
+VlanController(config-router)#network 192.168.20.0
+VlanController(config-router)#network 200.1.1.0
 ```
 
-=== Router1
+=== TransRouter12
 
 ```shell
-Router1(config)#interface s0/1/0
-Router1(config-if)#ip address 200.1.1.2 255.255.255.0
-Router1(config-if)#no shutdown
-Router1(config)#interface s0/1/1
-Router1(config-if)#ip address 200.2.1.1 255.255.255.0
-Router1(config-if)#no shutdown
-Router1(config)#router rip
-Router1(config-router)#network 200.1.1.0
-Router1(config-router)#network 200.2.1.0
+TransRouter12(config)#interface s0/1/0
+TransRouter12(config-if)#ip address 200.1.1.2 255.255.255.0
+TransRouter12(config-if)#no shutdown
+TransRouter12(config)#interface s0/1/1
+TransRouter12(config-if)#ip address 200.2.1.1 255.255.255.0
+TransRouter12(config-if)#no shutdown
+TransRouter12(config)#router rip
+TransRouter12(config-router)#network 200.1.1.0
+TransRouter12(config-router)#network 200.2.1.0
 ```
 
-=== Router2
+=== TransRouter23
 
 ```shell
-Router2(config)#interface s0/1/0
-Router2(config-if)#ip address 200.2.1.2 255.255.255.0
-Router2(config-if)#no shutdown
-Router2(config)#interface s0/1/1
-Router2(config-if)#ip address 200.3.1.1 255.255.255.0
-Router2(config-if)#no shutdown
-Router2(config)#router rip
-Router2(config-router)#network 200.2.1.0
-Router2(config-router)#network 200.3.1.0
+TransRouter23(config)#interface s0/1/0
+TransRouter23(config-if)#ip address 200.2.1.2 255.255.255.0
+TransRouter23(config-if)#no shutdown
+TransRouter23(config)#interface s0/1/1
+TransRouter23(config-if)#ip address 200.3.1.1 255.255.255.0
+TransRouter23(config-if)#no shutdown
+TransRouter23(config)#router rip
+TransRouter23(config-router)#network 200.2.1.0
+TransRouter23(config-router)#network 200.3.1.0
 ```
 
-=== Router3
+=== FinalRouter
 
 ```shell
-Router3(config)#interface s0/1/0
-Router3(config-if)#ip address 200.3.1.2 255.255.255.0
-Router3(config-if)#no shutdown
-Router3(config)#interface s0/1/1
-Router3(config-if)#ip address 114.5.14.2 255.255.255.0
-Router3(config-if)#no shutdown
-Router3(config)#interface g0/0/0
-Router3(config-if)#ip address 200.4.1.1 255.255.255.0
-Router3(config-if)#no shutdown
-Router3(config)#router rip
-Router3(config-router)#network 200.3.1.0
-Router3(config-router)#network 200.4.1.0
+FinalRouter(config)#interface s0/1/0
+FinalRouter(config-if)#ip address 200.3.1.2 255.255.255.0
+FinalRouter(config-if)#no shutdown
+FinalRouter(config)#interface s0/1/1
+FinalRouter(config-if)#ip address 114.5.14.2 255.255.255.0
+FinalRouter(config-if)#no shutdown
+FinalRouter(config)#interface g0/0/0
+FinalRouter(config-if)#ip address 200.4.1.1 255.255.255.0
+FinalRouter(config-if)#no shutdown
+FinalRouter(config)#router rip
+FinalRouter(config-router)#network 200.3.1.0
+FinalRouter(config-router)#network 200.4.1.0
 ```
 
-=== Router4
+=== OutsideRouter
 
 ```shell
-Router4(config)#interface s0/1/0
-Router4(config-if)#ip address 114.5.114.1
-Router4(config-if)#no shutdown
+OutsideRouter(config)#interface s0/1/0
+OutsideRouter(config-if)#ip address 114.5.114.1
+OutsideRouter(config-if)#no shutdown
 ```
 
 == 验证RIP配置情况
 
-- 此时除了Router4以外的各台设备均可`ping`通。
+- 此时除了OutsideRouter以外的各台设备均可`ping`通。
 
 == 配置NAT
 
-=== Router3
+=== FinalRouter
 
 ```shell
-Router3(config)#ip nat inside source static 200.3.1.1 114.5.14.254
-Router3(config)#ip nat inside source static 200.4.1.1 114.5.14.253
-Router3(config)#interface s0/1/0
-Router3(config-if)#ip nat inside
-Router3(config)#interface s0/1/1
-Router3(config-if)#ip nat outside
-Router3(config-if)#exit
-Router3#debug ip nat
+FinalRouter(config)#ip nat inside source static 200.3.1.1 114.5.14.254
+FinalRouter(config)#ip nat inside source static 200.4.1.1 114.5.14.253
+FinalRouter(config)#interface s0/1/0
+FinalRouter(config-if)#ip nat inside
+FinalRouter(config)#interface s0/1/1
+FinalRouter(config-if)#ip nat outside
+FinalRouter(config-if)#exit
+FinalRouter#debug ip nat
 ```
 
-=== Router2
+=== TransRouter23
 
-在Router2上增加对应的路由表项
+在TransRouter23上增加对应的路由表项:
 
 ```shell
-Router2(config)#ip route 114.5.14.0 255.255.255.0 s0/1/1
+TransRouter23(config)#ip route 114.5.14.0 255.255.255.0 s0/1/1
 ```
 
 == 验证 NAT 配置情况
 
-- Router2可以`ping`通Router4。
-- Router4可以`ping`通Router2的NAT地址`114.5.14.254`。
-- Router4可以`ping`通PC4的NAT地址`114.5.14.253`。
+- TransRouter23可以`ping`通OutsideRouter。
+- OutsideRouter可以`ping`通TransRouter23的NAT地址`114.5.14.254`。
+- OutsideRouter可以`ping`通PC4的NAT地址`114.5.14.253`。
 
 == 配置ACL
 
-怎么试都不对！我想在Router2上配置ACL，封禁Router1到Router2的PING命令...
+=== TransRouter23
+```
+TransRouter23(config)#access-list 100 deny icmp host 200.2.1.1 host 200.2.1.2
+TransRouter23(config)#access-list 100 permit ip any any
+TransRouter23(config)#interface s0/1/0
+TransRouter23(config-if)#ip access-group 100 in
+```
 
 == 验证ACL 配置情况
+
+- TransRouter12不可以`ping`通TransRouter23。但是可以`ping`通除此之外的所有设备。
+- TransRouter23 不受影响。
 
 
 = 实验总结
