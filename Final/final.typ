@@ -55,70 +55,20 @@
 
 = 实验步骤
 
-== 初始化
-
-
-=== 连接设备控制PC
+== 配置PC的 IP 地址
 
 #table(
-  columns: (30%, 20%, 15%, 20%, 15%),
-  align: (center, center, center, center, center),
-  table.header[*线型*][*设备A*][*端口A*][*设备B*][*端口B*],
-  [RS232-RJ45 翻转串口线], [VlanController], [Console], [VLAN10PC1], [USB],
-  [RS232-RJ45 翻转串口线], [Switch1], [Console], [VLAN20PC1], [USB],
-  [RS232-RJ45 翻转串口线], [TransRouter12], [Console], [VLAN10PC2], [USB],
-  [RS232-RJ45 翻转串口线], [Switch2], [Console], [VLAN20PC2], [USB],
-  [RS232-RJ45 翻转串口线], [TransRouter23], [Console], [PC4], [USB],
-  [RS232-RJ45 翻转串口线], [FinalRouter], [Console], [PC5], [USB],
-)
-
-=== 连接设备
-#table(
-  columns: (30%, 20%, 15%, 20%, 15%),
-  align: (center, center, center, center, center),
-  table.header[*线型*][*设备A*][*端口A*][*设备B*][*端口B*],
-  [串口线], [VlanController], [s0/1/0], [TransRouter12], [s0/1/0],
-  [串口线], [TransRouter12], [s0/1/1], [TransRouter23], [s0/1/0],
-  [串口线], [TransRouter23], [s0/1/1], [FinalRouter], [s0/1/0],
-  [串口线], [FinalRouter], [s0/1/1], [OutsideRouter], [s0/1/0],
-  [RJ45 直通线], [Switch1], [g1/0/1], [VLAN10PC1], [NIC],
-  [RJ45 直通线], [Switch1], [g1/0/2], [VLAN20PC1], [NIC],
-  [RJ45 直通线], [Switch2], [g1/0/1], [VLAN10PC1], [NIC],
-  [RJ45 直通线], [Switch2], [g1/0/2], [VLAN20PC2], [NIC],
-  [RJ45 直通线], [Switch1], [g1/0/24], [VlanController], [g0/0/0],
-  [RJ45 交叉线], [FinalRouter], [g0/0/0], [PC4], [NIC],
-  [RJ45 交叉线], [Switch1], [g1/0/23], [Switch2], [g1/0/23],
-)
-
-=== 配置PC
-
-#table(
-  columns: (10%, 30%, 30%, 30%),
+  columns: (25%, 25%, 25%, 25%),
   align: (center, center, center, center),
   table.header[*设备*][*IP*][*子网掩码*][*网关*],
-  [PC0], [192.168.10.2], [255.255.255.0], [192.168.10.1],
-  [PC1], [192.168.20.2], [255.255.255.0], [192.168.20.1],
-  [PC2], [192.168.10.3], [255.255.255.0], [192.168.10.1],
-  [PC3], [192.168.20.3], [255.255.255.0], [192.168.20.1],
+  [VLAN10PC1], [192.168.10.2], [255.255.255.0], [192.168.10.1],
+  [VLAN20PC1], [192.168.20.2], [255.255.255.0], [192.168.20.1],
+  [VLAN10PC2], [192.168.10.3], [255.255.255.0], [192.168.10.1],
+  [VLAN20PC2], [192.168.20.3], [255.255.255.0], [192.168.20.1],
   [PC4], [200.4.1.2], [255.255.255.0], [200.4.1.1],
 )
 
 == 配置交换机 VLAN
-
-=== Switch0
-
-```shell
-Switch0(config)#vlan 10
-Switch0(config)#vlan 20
-Switch0(config)#interface g1/0/23
-Switch0(config-if)#switchport mode trunk
-Switch0(config)#interface g1/0/1
-Switch0(config-if)#switchport mode access
-Switch0(config-if)#switchport access vlan 10
-Switch0(config-if)#interface g1/0/2
-Switch0(config-if)#switchport mode access
-Switch0(config-if)#switchport access vlan 20
-```
 
 === Switch1
 
@@ -134,6 +84,21 @@ Switch1(config-if)#interface g1/0/2
 Switch1(config-if)#switchport mode access
 Switch1(config-if)#switchport access vlan 20
 ```
+
+=== Switch2
+
+```shell
+Switch2(config)#vlan 10
+Switch2(config)#vlan 20
+Switch2(config)#interface g1/0/23
+Switch2(config-if)#switchport mode trunk
+Switch2(config)#interface g1/0/1
+Switch2(config-if)#switchport mode access
+Switch2(config-if)#switchport access vlan 10
+Switch2(config-if)#interface g1/0/2
+Switch2(config-if)#switchport mode access
+Switch2(config-if)#switchport access vlan 20
+```
 == 验证VLAN 配置情况
 
 - VLAN10PC1、VLAN10PC2可`ping`通。
@@ -142,7 +107,7 @@ Switch1(config-if)#switchport access vlan 20
 
 == 配置VLAN Trunk
 
-=== Switch0
+=== Switch1
 
 ```shell
 Switch1(config)#interface g1/0/24

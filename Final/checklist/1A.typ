@@ -23,6 +23,7 @@
   [开启PC-A-Back], [],
   [开启PC-B-Front], [],
   [开启PC-B-Mid], [],
+  [和2B准备4组串口线], [],
 )
 
 == 连接设备 - 1min
@@ -33,18 +34,6 @@
   table.header[*操作*][*完成*],
   [连接网线：Switch-A `g1/0/1` <==> PC-A-Front], [],
   [连接网线：Switch-A `g1/0/2` <==> PC-A-Mid], [],
-)
-
-== 初始化电脑 - 1min
-
-#table(
-  columns: (90%, 10%),
-  align: (left, center),
-  table.header[*操作*][*完成*],
-  [确认PC-A-Front超级终端打开并成功显示], [],
-  [确认PC-A-FrontIP为`192.168.10.2`], [],
-  [确认PC-A-Front子网掩码为`255.255.255.0`], [],
-  [确认PC-A-Front网关为`192.168.10.1`], [],
 )
 
 == 输入命令 - 1.5min
@@ -69,6 +58,20 @@
     ```],
   [],
 )
+
+== 初始化电脑 - 1min
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认PC-A-Front超级终端打开并成功显示], [],
+  [确认PC-A-FrontIP为`192.168.10.2`], [],
+  [确认PC-A-Front子网掩码为`255.255.255.0`], [],
+  [确认PC-A-Front网关为`192.168.10.1`], [],
+)
+
+
 
 == 验证&冗余 - 1.5min
 
