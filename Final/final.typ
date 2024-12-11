@@ -61,7 +61,7 @@
 === 连接设备控制PC
 
 #table(
-  columns: (40%, 15%, 15%, 15%, 15%),
+  columns: (30%, 20%, 15%, 20%, 15%),
   align: (center, center, center, center, center),
   table.header[*线型*][*设备A*][*端口A*][*设备B*][*端口B*],
   [RS232-RJ45 翻转串口线], [VlanController], [Console], [VLAN10PC1], [USB],
@@ -74,7 +74,7 @@
 
 === 连接设备
 #table(
-  columns: (40%, 15%, 15%, 15%, 15%),
+  columns: (30%, 20%, 15%, 20%, 15%),
   align: (center, center, center, center, center),
   table.header[*线型*][*设备A*][*端口A*][*设备B*][*端口B*],
   [串口线], [VlanController], [s0/1/0], [TransRouter12], [s0/1/0],
