@@ -24,7 +24,6 @@
 - 靠近天花板为上，靠近地板为下
 - 中间站1人指挥（M），AB区各2人负责（1A 2A 1B 2B）
 
-
 === 网络设备
 
 #table(
@@ -42,7 +41,7 @@
   columns: (25%, 25%, 25%, 25%),
   table.header[*A区*][*用途*][*B区*][*用途*],
   [PC-A-Front], [VLAN10PC1], [PC-B-Front], [VLAN10PC2],
-  [PC-A-Mid], [], [PC-B-Mid], [PC4],
+  [PC-A-Mid], [-], [PC-B-Mid], [PC4],
   [PC-A-Back], [VLAN20PC1], [PC-B-Back], [VLAN20PC2],
 )
 
@@ -52,7 +51,7 @@
   columns: (20%, 30%, 50%),
   table.header[*人员*][*控制端*][*被控端*],
   [1A], [PC-A-Front], [Router-A-Up],
-  [2A], [PC-A-Mid], [Switch-A Router-A-Mid],
+  [2A], [PC-A-Mid], [Router-A-Mid 与 Switch-A],
   [2A], [PC-A-Back], [Router-A-Down],
   [1B], [PC-B-Front], [Router-B-Up],
   [2B], [PC-B-Mid], [Switch-B],
@@ -60,12 +59,6 @@
 )
 
 = VLAN & Trunk - 12min
-
-- 设备只涉及VLAN相关部分，即
-  1. Router-A-Up
-  2. Switch-A Switch-B
-  3. PC-A-Front PC-A-Mid PC-A-Back PC-B-Front
-
 
 == 开机 准备直通线 - 2min
 
@@ -125,7 +118,6 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
   [在 PC-A-Mid 初始化超级终端并配置 Switch-A], [2A],
   [在 PC-B-Mid 初始化超级终端并配置 Switch-B], [2B],
 )
@@ -138,7 +130,6 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
   [配置PC-A-Front 的 IP], [1A],
   [配置PC-A-Back 的 IP], [2A],
   [配置PC-B-Front 的 IP], [1B],
@@ -151,30 +142,27 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
   [在 PC-A-Front 上
     - 能`ping`通`192.168.20.2`
-    - 不能`ping`通`192.168.10.3`
-    - 不能`ping`通`192.168.20.3`
+    - 不能`ping`通`192.168.10.3` `192.168.20.3`
   ],
   [1A],
 
   [在PC-A-Back 上
     - 能`ping`通`192.168.20.3`
-    - 不能`ping`通`192.168.10.2`
-    - 不能`ping`通`192.168.20.2`],
+    - 不能`ping`通`192.168.10.2` `192.168.20.2`
+  ],
   [2A],
 
   [在PC-B-Front 上
     - 能`ping`通`192.168.10.2`
-    - 不能`ping`通`192.168.10.3`
-    - 不能`ping`通`192.168.20.3`],
+    - 不能`ping`通`192.168.10.3` `192.168.20.3`],
   [1B],
 
   [在PC-B-Back 上
     - 能`ping`通`192.168.10.3`
-    - 不能`ping`通`192.168.10.2`
-    - 不能`ping`通`192.168.20.2`],
+    - 不能`ping`通`192.168.10.2` `192.168.20.2`
+  ],
   [2B],
 )
 
@@ -184,7 +172,6 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
   [在 PC-A-Front 配置 Router-A-Front], [1A],
   [在 PC-A-Mid 配置 Switch-A], [2A],
 )
@@ -195,37 +182,13 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
-  [在 PC-A-Front 上
-    - 能`ping`通`192.168.20.2`
-    - 能`ping`通`192.168.10.3`
-    - 能`ping`通`192.168.20.3`
-  ],
-  [1A],
-
-  [在PC-A-Back 上
-    - 能`ping`通`192.168.20.3`
-    - 能`ping`通`192.168.10.2`
-    - 能`ping`通`192.168.20.2`],
-  [2A],
-
-  [在PC-B-Front 上
-    - 能`ping`通`192.168.10.2`
-    - 能`ping`通`192.168.10.3`
-    - 能`ping`通`192.168.20.3`],
-  [1B],
-
-  [在PC-B-Back 上
-    - 能`ping`通`192.168.10.3`
-    - 能`ping`通`192.168.10.2`
-    - 能`ping`通`192.168.20.2`],
-  [2B],
+  [在 PC-A-Front 上能`ping`通`192.168.10.3` `192.168.20.2` `192.168.20.3` ], [1A],
+  [在PC-A-Back 上能`ping`通`192.168.10.2` `192.168.20.2` `192.168.20.3`], [2A],
+  [在PC-B-Front 上能`ping`通`192.168.10.2` `192.168.10.3` `192.168.20.3`], [1B],
+  [在PC-B-Back 上能`ping`通`192.168.10.2` `192.168.10.3` `192.168.20.2`], [2B],
 )
 
 = RIP 6min
-
-- 引入剩余设备
-- 无需对Switch和除PC-B-Mid以外的PC进行配置
 
 == 接线 - 1.5min
 
@@ -270,18 +233,11 @@
 
 == 输入命令 - 3min
 
-- 配置网络设备前须完成 Router-A-Mid、Router-A-Down、Router-B-Up、Router-B-Down 的初始化操作，详见checklist
-
 #table(
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [
-    1. 指挥
-    2. 在 PC-A-Front 配置 Router-A-Up
-  ],
-  [M],
-
+  [在 PC-A-Front 配置 Router-A-Up ], [M],
   [在 PC-A-Mid 初始化超级终端并配置 Router-A-Mid], [1A],
   [在 PC-A-Back 初始化超级终端并配置 Router-A-Down], [2A],
   [在 PC-B-Front 初始化超级终端并配置 Router-B-Up], [1B],
@@ -290,11 +246,13 @@
 
 == 验证&冗余 - 1.5min
 
+- 取最长的拓扑链路证明RIP的完整性
+
 #table(
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [TODO],
+  [在 PC-A-Back 上通过 Router-A-Down 能`ping`通`200.4.1.2`], [2A],
 )
 
 = NAT - 3min
@@ -305,30 +263,18 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
   [在 PC-A-Back 配置 Router-A-Down], [2A],
   [在 PC-B-Front 配置 Router-B-Up], [1B],
 )
 
 == 验证&冗余 - 1.5min
 
-- Router-A-Down可以`ping`通Router-B-Down`114.5.14.1`。
-- Router-B-Down可以`ping`通Router-A-Down的NAT地址`114.5.14.254`。
-- Router-B-Down可以`ping`通PC-B-Mid的NAT地址`114.5.14.253`。
-
 #table(
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
-  [在 PC-A-Back 上通过 Router-A-Down
-    - 能`ping`通`114.5.14.1`],
-  [2A],
-
-  [在 PC-B-Back 上通过 Router-B-Down
-    - 能`ping`通`114.5.14.254`
-    - 能`ping`通`114.5.14.253`],
-  [2B],
+  [在 PC-A-Back 上通过 Router-A-Down 能`ping`通`114.5.14.1`], [2A],
+  [在 PC-B-Back 上通过 Router-B-Down 能`ping`通`114.5.14.254` `114.5.14.253`], [2B],
 )
 
 = ACL - 3min
@@ -339,7 +285,6 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
   [在 PC-A-Back 配置 Router-A-Down], [2A],
 )
 
@@ -349,13 +294,6 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [指挥], [M],
-  [在 PC-A-Mid 上通过 Router-A-Mid
-    - 不能`ping`通`200.2.1.2`],
-  [2A],
-
-  [在 PC-A-Back 上通过 Router-A-Down
-    - 能`ping`通`200.2.1.1`
-  ],
-  [2B],
+  [在 PC-A-Mid 上通过 Router-A-Mid 不能`ping`通`200.2.1.2`], [2A],
+  [在 PC-A-Back 上通过 Router-A-Down 能`ping`通`200.2.1.1` ], [2B],
 )
