@@ -10,43 +10,48 @@
 
 #show: assignment_class.with(title, author, course_id, instructor, semester, due_time, id)
 
-= VLAN & Trunk - 6min
+= VLAN & Trunk - 12min
 
 
-== 开机 准备网线 - 1min
+== 开机 准备网线 - 2min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [开启Switch-A], [],
-  [开启Switch-B], [],
-  [开启Router-A-Up], [],
-  [开启Router-A-Mid], [],
-  [开启Router-A-Down], [],
-  [开启Router-B-Up], [],
-  [开启Router-B-Mid], [],
+  [开启Switch-A Switch-B], [],
+  [开启Router-A-Up Router-A-Mid Router-A-Down Router-B-Up Router-B-Down], [],
+  [开启6台电脑], [],
   [确认1A完成], [],
-  [确认1B完成], [],
   [确认2A完成], [],
-  [确认2B完成], [],
+  [确认1B 2B完成], [],
 )
 
-== 连接设备 - 1min
+== 连接设备 - 2min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
   [连接交叉线：Switch-A `g1/0/23` <==> Switch-B `g1/0/23`], [],
-  [连接网线：Switch-A `g1/0/24` <==> Router-A-Up `g0/0/0`], [],
+  [连接直通线：Switch-A `g1/0/24` <==> Router-A-Up `g0/0/0`], [],
   [确认1A完成], [],
   [确认1B完成], [],
   [确认2A完成], [],
   [确认2B完成], [],
 )
 
-== 初始化电脑 - 1min
+== 输命令 - 2min
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认2A完成], [],
+  [确认2B完成], [],
+)
+
+== 初始化电脑 - 2min
 
 #table(
   columns: (90%, 10%),
@@ -58,7 +63,7 @@
   [确认2B完成], [],
 )
 
-== 输入命令 - 1.5min
+== 第一次验证 - 1min
 
 #table(
   columns: (90%, 10%),
@@ -70,7 +75,17 @@
   [确认2B完成], [],
 )
 
-== 验证&冗余 - 1.5min
+== 配置Trunk - 1.5min
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认1A完成], [],
+  [确认2A完成], [],
+)
+
+== 第二次验证&冗余 - 1.5min
 
 #table(
   columns: (90%, 10%),
@@ -96,7 +111,7 @@
   [确认2B完成], [],
 )
 
-== 输入命令 - 3min
+== 输命令 - 3min
 
 #table(
   columns: (90%, 10%),
@@ -126,10 +141,7 @@
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
-  [确认1B完成], [],
   [确认2A完成], [],
-  [确认2B完成], [],
 )
 
 = NAT - 3min
@@ -140,7 +152,7 @@
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
+  [确认2A完成], [],
   [确认1B完成], [],
 )
 
@@ -150,11 +162,13 @@
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
-  [确认1B完成], [],
+  [确认2A完成], [],
+  [确认2B完成], [],
 )
 
 = ACL - 3min
+
+== 输命令 - 1.5min
 
 #table(
   columns: (90%, 10%),

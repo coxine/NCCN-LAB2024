@@ -10,70 +10,75 @@
 
 #show: assignment_class.with(title, author, course_id, instructor, semester, due_time, id)
 
-= VLAN & Trunk - 6min
+= VLAN & Trunk
 
-== 开机 准备网线 - 1min
+== 开机 准备网线
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [开启PC-A-Front], [],
-  [开启PC-A-Mid], [],
-  [开启PC-A-Back], [],
-  [开启PC-B-Front], [],
-  [开启PC-B-Mid], [],
-  [和2B准备4组串口线], [],
+  [准备并组装5根Console线], [],
 )
 
-== 连接设备 - 1min
+== 连接设备
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
   [连接网线：Switch-A `g1/0/1` <==> PC-A-Front], [],
-  [连接网线：Switch-A `g1/0/2` <==> PC-A-Mid], [],
+  [连接Console线：Router-A-Up <==> PC-A-Front], [],
 )
 
-== 输入命令 - 1.5min
+== 输命令
 
-#table(
-  columns: (90%, 10%),
-  align: (left, center),
-  table.header[*操作*][*完成*],
-  [在PC-A-Mid配置Switch-A
-    ```shell
-    Switch(config)#hostname Switch-A
-    Switch-A(config)vlan 10
-    Switch-A(config)#vlan 20
-    Switch-A(config)#interface g1/0/23
-    Switch-A(config-if)#switchport mode trunk
-    Switch-A(config)#interface g1/0/1
-    Switch-A(config-if)#switchport mode access
-    Switch-A(config-if)#switchport access vlan 10
-    Switch-A(config-if)#interface g1/0/2
-    Switch-A(config-if)#switchport mode access
-    Switch-A(config-if)#switchport access vlan 20
-    ```],
-  [],
-)
-
-== 初始化电脑 - 1min
+== 初始化电脑
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
   [确认PC-A-Front超级终端打开并成功显示], [],
-  [确认PC-A-FrontIP为`192.168.10.2`], [],
-  [确认PC-A-Front子网掩码为`255.255.255.0`], [],
-  [确认PC-A-Front网关为`192.168.10.1`], [],
+  [确认PC-A-Front IP为`192.168.10.2`], [],
+  [确认PC-A-Front 子网掩码为`255.255.255.0`], [],
+  [确认PC-A-Front 网关为`192.168.10.1`], [],
 )
 
+== 第一次验证&冗余
 
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认PC-A-Front能`ping`通`192.168.10.3`], [],
+  [确认PC-A-Front不能`ping`通`192.168.20.2`], [],
+  [确认PC-A-Front不能`ping`通`192.168.20.3`], [],
+)
 
-== 验证&冗余 - 1.5min
+== 配置Trunk
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [在PC-A-Front配置Router-A-Up
+    ```shell
+    Router(config)#hostname Router-A-Up
+    Router-A-Up(config)#interface g0/0/0
+    Router-A-Up(config-if)#no ip address
+    Router-A-Up(config-if)#no shutdown
+    Router-A-Up(config)#int g0/0/0.10
+    Router-A-Up(config-if)#encapsulation dot1q 10
+    Router-A-Up(config-if)#ip address 192.168.10.1 255.255.255.0
+    Router-A-Up(config)#int g0/0/0.20
+    Router-A-Up(config-if)#encapsulation dot1q 20
+    Router-A-Up(config-if)#ip address 192.168.20.1 255.255.255.0
+    ```],
+  [],
+)
+
+== 第二次验证&冗余
 
 #table(
   columns: (90%, 10%),
@@ -84,9 +89,9 @@
   [确认PC-A-Front能`ping`通`192.168.20.3`], [],
 )
 
-= RIP - 6min
+= RIP
 
-== 接线 - 1.5min
+== 接线
 
 #table(
   columns: (90%, 10%),
@@ -94,10 +99,9 @@
   table.header[*操作*][*完成*],
   [连接串口线：Router-A-Up `s0/1/0` <==> Router-A-Mid `s0/1/0`], [],
   [连接串口线：Router-A-Mid `s0/1/1` <==> Router-A-Down `s0/1/0`], [],
-  [连接交叉线：Router-B-Up `g0/0/0` <==> PC-B-Mid], [],
 )
 
-== 输入命令 - 3min
+== 输命令
 
 #table(
   columns: (90%, 10%),
@@ -117,27 +121,19 @@
   [],
 )
 
-== 验证&冗余 - 1.5min
+== 验证&冗余
+
+= NAT
+
+= ACL
+
+== 输命令
+
+== 验证&冗余
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认Router-A-Mid能`ping`通`200.2.1.2`], [],
-  [确认Router-A-Mid能`ping`通`200.3.1.2`], [],
-  [确认Router-A-Mid能`ping`通`200.4.1.2`], [],
-  [确认PC-A-Mid能`ping`通`200.4.1.2`], [],
-)
-
-= NAT - 3min
-
-= ACL - 3min
-
-== 验证&冗余 - 1.5min
-
-#table(
-  columns: (90%, 10%),
-  align: (left, center),
-  table.header[*操作*][*完成*],
-  [确认Router-A-Mid不能`ping`通`200.2.1.2`], [],
+  [在PC-A-Mid上确认Router-A-Mid不能`ping`通`200.2.1.2`], [],
 )

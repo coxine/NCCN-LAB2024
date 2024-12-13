@@ -15,7 +15,7 @@
 == 操作规范
 
 - 指差确认：插入直通线后，手指着网口说一遍“xx设备的yy网口已插好”
-- 指令复诵：在终端输入命令前默读一遍，输入时大声复诵
+- 指令复诵：在终端输命令前默读一遍，输入时大声复诵
 
 == 人员&设备分布
 
@@ -109,7 +109,7 @@
   [2B],
 )
 
-== 输入命令 - 2min
+== 输命令 - 2min
 
 - 此时Switch-A、Switch-B、Router-A-Up已经开机成功
 - 配置网络设备前须完成初始化操作，详见checklist
@@ -118,8 +118,8 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [在 PC-A-Mid 初始化超级终端并配置 Switch-A], [2A],
-  [在 PC-B-Mid 初始化超级终端并配置 Switch-B], [2B],
+  [在 PC-A-Mid 配置 Switch-A], [2A],
+  [在 PC-B-Mid 配置 Switch-B], [2B],
 )
 
 == 初始化电脑 - 2min
@@ -143,25 +143,25 @@
   align: (left, center),
   table.header[*操作*][*人员*],
   [在 PC-A-Front 上
-    - 能`ping`通`192.168.20.2`
-    - 不能`ping`通`192.168.10.3` `192.168.20.3`
+    - 能`ping`通`192.168.10.3`
+    - 不能`ping`通`192.168.20.2` `192.168.20.3`
   ],
   [1A],
 
   [在PC-A-Back 上
     - 能`ping`通`192.168.20.3`
-    - 不能`ping`通`192.168.10.2` `192.168.20.2`
+    - 不能`ping`通`192.168.10.2` `192.168.10.3`
   ],
   [2A],
 
   [在PC-B-Front 上
     - 能`ping`通`192.168.10.2`
-    - 不能`ping`通`192.168.10.3` `192.168.20.3`],
+    - 不能`ping`通`192.168.20.2` `192.168.20.3`],
   [1B],
 
   [在PC-B-Back 上
-    - 能`ping`通`192.168.10.3`
-    - 不能`ping`通`192.168.10.2` `192.168.20.2`
+    - 能`ping`通`192.168.20.2`
+    - 不能`ping`通`192.168.10.2` `192.168.10.3`
   ],
   [2B],
 )
@@ -172,7 +172,7 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [在 PC-A-Front 配置 Router-A-Front], [1A],
+  [在 PC-A-Front 配置 Router-A-Up], [1A],
   [在 PC-A-Mid 配置 Switch-A], [2A],
 )
 
@@ -231,17 +231,17 @@
   [2B],
 )
 
-== 输入命令 - 3min
+== 输命令 - 3min
 
 #table(
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
   [在 PC-A-Front 配置 Router-A-Up ], [M],
-  [在 PC-A-Mid 初始化超级终端并配置 Router-A-Mid], [1A],
-  [在 PC-A-Back 初始化超级终端并配置 Router-A-Down], [2A],
-  [在 PC-B-Front 初始化超级终端并配置 Router-B-Up], [1B],
-  [在 PC-B-Back 初始化超级终端并配置 Router-B-Down], [2B],
+  [在 PC-A-Mid 配置 Router-A-Mid], [1A],
+  [在 PC-A-Back 配置 Router-A-Down], [2A],
+  [在 PC-B-Front 配置 Router-B-Up], [1B],
+  [在 PC-B-Back 配置 Router-B-Down], [2B],
 )
 
 == 验证&冗余 - 1.5min
@@ -294,6 +294,6 @@
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
-  [在 PC-A-Mid 上通过 Router-A-Mid 不能`ping`通`200.2.1.2`], [2A],
-  [在 PC-A-Back 上通过 Router-A-Down 能`ping`通`200.2.1.1` ], [2B],
+  [在 PC-A-Mid 上通过 Router-A-Mid 不能`ping`通`200.2.1.2`], [1A],
+  [在 PC-A-Back 上通过 Router-A-Down 能`ping`通`200.2.1.1` ], [2A],
 )

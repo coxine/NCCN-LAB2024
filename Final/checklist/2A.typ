@@ -10,62 +10,89 @@
 
 #show: assignment_class.with(title, author, course_id, instructor, semester, due_time, id)
 
-= VLAN & Trunk - 6min
+= VLAN & Trunk
 
-== 开机 准备网线 - 1min
+== 开机 准备网线
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [准备5根直通线 2根交叉线], [],
+  [准备5根直通线、2根交叉线], [],
 )
 
-== 连接设备 - 1min
+== 连接设备
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [连接Console线：Router-A-Up <==> PC-A-Front], [],
+  [连接直通线：Switch-A `g1/0/2` <==> PC-A-Back], [],
   [连接Console线：Switch-A <==> PC-A-Mid], [],
 )
 
-== 初始化电脑 - 1min
+== 输命令
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认PC-A-Mid超级终端打开并成功显示], [],
-  [确认PC-A-MidIP为`192.168.20.2`], [],
-  [确认PC-A-Mid子网掩码为`255.255.255.0`], [],
-  [确认PC-A-Mid网关为`192.168.20.1`], [],
-)
-
-== 输入命令 - 1.5min
-
-#table(
-  columns: (90%, 10%),
-  align: (left, center),
-  table.header[*操作*][*完成*],
-  [在PC-A-Front配置Router-A-Up
+  [在PC-A-Mid配置Switch-A
     ```shell
-    Router(config)#hostname Router-A-Up
-    Router-A-Up(config)#interface g0/0/0
-    Router-A-Up(config-if)#no ip address
-    Router-A-Up(config-if)#no shutdown
-    Router-A-Up(config)#int g0/0/0.10
-    Router-A-Up(config-if)#encapsulation dot1q 10
-    Router-A-Up(config-if)#ip address 192.168.10.1 255.255.255.0
-    Router-A-Up(config)#int g0/0/0.20
-    Router-A-Up(config-if)#encapsulation dot1q 20
-    Router-A-Up(config-if)#ip address 192.168.20.1 255.255.255.0
+    Switch(config)#hostname Switch-A
+    Switch-A(config)vlan 10
+    Switch-A(config)#vlan 20
+    Switch-A(config)#interface g1/0/23
+    Switch-A(config-if)#switchport mode trunk
+    Switch-A(config)#interface g1/0/1
+    Switch-A(config-if)#switchport mode access
+    Switch-A(config-if)#switchport access vlan 10
+    Switch-A(config-if)#interface g1/0/2
+    Switch-A(config-if)#switchport mode access
+    Switch-A(config-if)#switchport access vlan 20
     ```],
   [],
 )
 
-== 验证&冗余 - 1.5min
+== 初始化电脑
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认PC-A-Back 超级终端打开并成功显示], [],
+  [确认PC-A-Back IP为`192.168.20.2`], [],
+  [确认PC-A-Back 子网掩码为`255.255.255.0`], [],
+  [确认PC-A-Back 网关为`192.168.20.1`], [],
+)
+
+== 第一次验证
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认PC-A-Back不能`ping`通`192.168.10.2`], [],
+  [确认PC-A-Back不能`ping`通`192.168.10.3`], [],
+  [确认PC-A-Back能`ping`通`192.168.20.3`], [],
+)
+
+== 配置Trunk
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [在PC-A-Mid配置Switch-A
+    ```shell
+    Switch1(config)#interface g1/0/24
+    Switch1(config-if)#switchport mode trunk
+    ```],
+  [],
+)
+
+
+== 第二次验证&冗余
 
 #table(
   columns: (90%, 10%),
@@ -76,20 +103,20 @@
   [确认PC-A-Back能`ping`通`192.168.20.3`], [],
 )
 
-= RIP - 6min
+= RIP
 
-== 接线 - 1.5min
+== 接线
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
   [ 拔Console线：Switch-A <=/=> PC-A-Mid ], [],
-  [ 连接Console线：Router-A-Up <==> PC-A-Front ], [],
+  [ 连接Console线：Router-A-Mid <==> PC-A-Mid], [],
   [ 连接Console线：Router-A-Down <==> PC-A-Back], [],
 )
 
-== 输入命令 - 3min
+== 输命令
 
 #table(
   columns: (90%, 10%),
@@ -111,21 +138,18 @@
   [],
 )
 
-== 验证&冗余 - 1.5min
+== 验证&冗余
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认Router-A-Down能`ping`通`200.1.1.2`], [],
-  [确认Router-A-Down能`ping`通`200.3.1.2`], [],
-  [确认Router-A-Down能`ping`通`200.4.1.2`], [],
-  [确认PC-A-Back能`ping`通`200.4.1.2`], [],
+  [在PC-A-Back 上确认Router-A-Down能`ping`通`200.4.1.2`], [],
 )
 
-= NAT - 3min
+= NAT
 
-== 输命令 - 1.5min
+== 输命令
 
 #table(
   columns: (90%, 10%),
@@ -146,16 +170,18 @@
 )
 
 
-== 验证&冗余 - 1.5min
+== 验证&冗余
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认Router-A-Down能`ping`通`114.5.14.1`], [],
+  [在PC-A-Back 上确认Router-A-Down能`ping`通`114.5.14.1`], [],
 )
 
-= ACL - 3min
+= ACL
+
+== 输命令
 
 #table(
   columns: (90%, 10%),
@@ -171,6 +197,12 @@
   [],
 )
 
-== 验证&冗余 - 1.5min
+== 验证&冗余
 
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [在PC-A-Back 上确认Router-A-Down能`ping`通`200.2.1.1`], [],
+)
 
