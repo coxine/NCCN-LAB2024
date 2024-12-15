@@ -65,7 +65,7 @@
   [VLAN20PC1], [192.168.20.2], [255.255.255.0], [192.168.20.1],
   [VLAN10PC2], [192.168.10.3], [255.255.255.0], [192.168.10.1],
   [VLAN20PC2], [192.168.20.3], [255.255.255.0], [192.168.20.1],
-  [PC4], [200.4.1.2], [255.255.255.0], [200.4.1.1],
+  [PC4], [200.3.1.2], [255.255.255.0], [200.3.1.1],
 )
 
 == 配置交换机 VLAN
@@ -147,49 +147,49 @@ VlanController(config-router)#network 192.168.20.0
 VlanController(config-router)#network 200.1.1.0
 ```
 
-=== TransRouter12
+=== TransRouter
 
 ```shell
-TransRouter12(config)#interface s0/1/0
-TransRouter12(config-if)#ip address 200.1.1.2 255.255.255.0
-TransRouter12(config-if)#no shutdown
-TransRouter12(config)#interface s0/1/1
-TransRouter12(config-if)#ip address 200.2.1.1 255.255.255.0
-TransRouter12(config-if)#no shutdown
-TransRouter12(config)#router rip
-TransRouter12(config-router)#network 200.1.1.0
-TransRouter12(config-router)#network 200.2.1.0
+TransRouter(config)#interface s0/1/0
+TransRouter(config-if)#ip address 200.1.1.2 255.255.255.0
+TransRouter(config-if)#no shutdown
+TransRouter(config)#interface s0/1/1
+TransRouter(config-if)#ip address 200.2.1.1 255.255.255.0
+TransRouter(config-if)#no shutdown
+TransRouter(config)#router rip
+TransRouter(config-router)#network 200.1.1.0
+TransRouter(config-router)#network 200.2.1.0
 ```
 
-=== TransRouter23
+// === TransRouter23
 
-```shell
-TransRouter23(config)#interface s0/1/0
-TransRouter23(config-if)#ip address 200.2.1.2 255.255.255.0
-TransRouter23(config-if)#no shutdown
-TransRouter23(config)#interface s0/1/1
-TransRouter23(config-if)#ip address 200.3.1.1 255.255.255.0
-TransRouter23(config-if)#no shutdown
-TransRouter23(config)#router rip
-TransRouter23(config-router)#network 200.2.1.0
-TransRouter23(config-router)#network 200.3.1.0
-```
+// ```shell
+// TransRouter23(config)#interface s0/1/0
+// TransRouter23(config-if)#ip address 200.2.1.2 255.255.255.0
+// TransRouter23(config-if)#no shutdown
+// TransRouter23(config)#interface s0/1/1
+// TransRouter23(config-if)#ip address 200.3.1.1 255.255.255.0
+// TransRouter23(config-if)#no shutdown
+// TransRouter23(config)#router rip
+// TransRouter23(config-router)#network 200.2.1.0
+// TransRouter23(config-router)#network 200.3.1.0
+// ```
 
 === FinalRouter
 
 ```shell
 FinalRouter(config)#interface s0/1/0
-FinalRouter(config-if)#ip address 200.3.1.2 255.255.255.0
+FinalRouter(config-if)#ip address 200.2.1.2 255.255.255.0
 FinalRouter(config-if)#no shutdown
 FinalRouter(config)#interface s0/1/1
 FinalRouter(config-if)#ip address 114.5.14.2 255.255.255.0
 FinalRouter(config-if)#no shutdown
 FinalRouter(config)#interface g0/0/0
-FinalRouter(config-if)#ip address 200.4.1.1 255.255.255.0
+FinalRouter(config-if)#ip address 200.3.1.1 255.255.255.0
 FinalRouter(config-if)#no shutdown
 FinalRouter(config)#router rip
+FinalRouter(config-router)#network 200.2.1.0
 FinalRouter(config-router)#network 200.3.1.0
-FinalRouter(config-router)#network 200.4.1.0
 ```
 
 === OutsideRouter
@@ -202,15 +202,16 @@ OutsideRouter(config-if)#no shutdown
 
 == 验证RIP配置情况
 
-- 此时除了OutsideRouter以外的各台设备均可`ping`通。
+- 除了OutsideRouter以外的各台设备均可`ping`通。
+- 此处取最长链路，VLAN20PC1 `ping`PC4来验证联通性。
 
 == 配置NAT
 
 === FinalRouter
 
 ```shell
-FinalRouter(config)#ip nat inside source static 200.3.1.1 114.5.14.254
-FinalRouter(config)#ip nat inside source static 200.4.1.1 114.5.14.253
+FinalRouter(config)#ip nat inside source static 200.2.1.1 114.5.14.254
+FinalRouter(config)#ip nat inside source static 200.3.1.2 114.5.14.253
 FinalRouter(config)#interface s0/1/0
 FinalRouter(config-if)#ip nat inside
 FinalRouter(config)#interface s0/1/1
@@ -219,34 +220,34 @@ FinalRouter(config-if)#exit
 FinalRouter#debug ip nat
 ```
 
-=== TransRouter23
+=== TransRouter
 
-在TransRouter23上增加对应的路由表项:
+在TransRouter上增加对应的路由表项:
 
 ```shell
-TransRouter23(config)#ip route 114.5.14.0 255.255.255.0 s0/1/1
+TransRouter(config)#ip route 114.5.14.0 255.255.255.0 s0/1/1
 ```
 
 == 验证 NAT 配置情况
 
-- TransRouter23可以`ping`通OutsideRouter。
-- OutsideRouter可以`ping`通TransRouter23的NAT地址`114.5.14.254`。
+- TransRouter可以`ping`通OutsideRouter`114.5.14.1`。
+- OutsideRouter可以`ping`通TransRouter的NAT地址`114.5.14.254`。
 - OutsideRouter可以`ping`通PC4的NAT地址`114.5.14.253`。
 
 == 配置ACL
 
-=== TransRouter23
+=== FinalRouter
 ```
-TransRouter23(config)#access-list 100 deny icmp host 200.2.1.1 host 200.2.1.2
-TransRouter23(config)#access-list 100 permit ip any any
-TransRouter23(config)#interface s0/1/0
-TransRouter23(config-if)#ip access-group 100 in
+FinalRouter(config)#access-list 100 deny icmp host 200.2.1.1 host 200.2.1.2
+FinalRouter(config)#access-list 100 permit ip any any
+FinalRouter(config)#interface s0/1/0
+FinalRouter(config-if)#ip access-group 100 in
 ```
 
 == 验证ACL 配置情况
 
-- TransRouter12不可以`ping`通TransRouter23。但是可以`ping`通除此之外的所有设备。
-- TransRouter23 不受影响。
+- TransRouter不可以`ping`通FinalRouter`200.2.1.2`。但是可以`ping`通除此之外的所有设备。
+- 其余设备 不受影响。
 
 
 = 实验总结

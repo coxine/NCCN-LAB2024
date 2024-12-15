@@ -10,10 +10,10 @@
 
 #show: assignment_class.with(title, author, course_id, instructor, semester, due_time, id)
 
-= VLAN & Trunk - 6min
+= VLAN & Trunk - 10min
 
 
-== 开机 准备网线 - 1min
+== 开机 准备网线 - 2min
 
 #table(
   columns: (90%, 10%),
@@ -22,10 +22,9 @@
   [开启Switch-A], [],
   [开启Switch-B], [],
   [开启Router-A-Up], [],
-  [开启Router-A-Mid], [],
   [开启Router-A-Down], [],
   [开启Router-B-Up], [],
-  [开启Router-B-Mid], [],
+  [开启Router-B-Down], [],
   [确认1A完成], [],
   [确认1B完成], [],
   [确认2A完成], [],
@@ -46,54 +45,72 @@
   [确认2B完成], [],
 )
 
-== 初始化电脑 - 1min
+
+此处Switch初始化和设备接线会并行进行, M注意此处不需要下达初始化Switch命令
+
+
+
+== Switch初始化 1min
+
+M在Switch初始化完成报告后立刻下达初始化PC和配置VLAN的命令
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认2A完成], [],
+  [确认2B完成], [],
+)
+
+
+== 初始化电脑 && 配置Switch的VLAN - 2min
+
+此处初始化电脑和配置Switch并行
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
-  [确认1B完成], [],
-  [确认2A完成], [],
-  [确认2B完成], [],
+  [确认全员完成], [],
 )
 
-== 输入命令 - 1.5min
+== VLAN验证1  - 1.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
-  [确认1B完成], [],
-  [确认2A完成], [],
-  [确认2B完成], [],
+  [确认全员完成], [],
 )
 
-== 验证&冗余 - 1.5min
+== 配置VLAN Trunk路由器 1min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
-  [确认1B完成], [],
-  [确认2A完成], [],
-  [确认2B完成], [],
+  [确认全员完成], [],
 )
+
+== VLAN验证2 - 1.5min
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认全员完成], [],
+)
+
 
 = RIP - 6min
 
-== 接线 - 1.5min
+== 接线 - 2.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
-  [确认1B完成], [],
-  [确认2A完成], [],
-  [确认2B完成], [],
+  [确认全员完成], [],
+
 )
 
 == 输入命令 - 3min
@@ -102,22 +119,7 @@
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [在PC-A-Front配置Router-A-Up
-    ```shell
-    Router-A-Up(config)#interface s0/1/0
-    Router-A-Up(config-if)#ip address 200.1.1.1 255.255.255.0
-    Router-A-Up(config-if)#no shutdown
-    Router-A-Up(config)#router rip
-    Router-A-Up(config-router)#network 192.168.10.0
-    Router-A-Up(config-router)#network 192.168.20.0
-    Router-A-Up(config-router)#network 200.1.1.0
-    ```],
-  [],
-
-  [确认1A完成], [],
-  [确认1B完成], [],
-  [确认2A完成], [],
-  [确认2B完成], [],
+  [确认全员完成], [],
 )
 
 == 验证&冗余 - 1.5min
@@ -126,10 +128,7 @@
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
   [确认1B完成], [],
-  [确认2A完成], [],
-  [确认2B完成], [],
 )
 
 = NAT - 3min
@@ -151,7 +150,7 @@
   align: (left, center),
   table.header[*操作*][*完成*],
   [确认1A完成], [],
-  [确认1B完成], [],
+  [确认2B完成], [],
 )
 
 = ACL - 3min
@@ -160,7 +159,7 @@
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认2A完成], [],
+  [确认1B完成], [],
 )
 
 == 验证&冗余 - 1.5min
@@ -169,6 +168,5 @@
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认1A完成], [],
   [确认2A完成], [],
 )

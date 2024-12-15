@@ -10,9 +10,9 @@
 
 #show: assignment_class.with(title, author, course_id, instructor, semester, due_time, id)
 
-= VLAN & Trunk - 6min
+= VLAN & Trunk - 10min
 
-== 开机 准备网线 - 1min
+== 开机 准备网线 - 2min
 
 #table(
   columns: (90%, 10%),
@@ -21,51 +21,76 @@
   [准备5根直通线 2根交叉线], [],
 )
 
-== 连接设备 - 1min
+== 连接设备 - 0.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [连接Console线：Router-A-Up <==> PC-A-Front], [],
   [连接Console线：Switch-A <==> PC-A-Mid], [],
 )
 
-== 初始化电脑 - 1min
+完成后请立刻自行初始化Switch
+
+== Switch初始化 - 1.5min
+初始化完成立刻报告组长
+
+注意是初始化完成，即输入`no`之后
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认PC-A-Mid超级终端打开并成功显示], [],
-  [确认PC-A-MidIP为`192.168.20.2`], [],
-  [确认PC-A-Mid子网掩码为`255.255.255.0`], [],
-  [确认PC-A-Mid网关为`192.168.20.1`], [],
+  [初始化Switch-A], [],
 )
 
-== 输入命令 - 1.5min
+== 配置Switch-A 的 VLAN - 2min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [在PC-A-Front配置Router-A-Up
+  [在PC-A-Mid配置Switch-A
     ```shell
-    Router(config)#hostname Router-A-Up
-    Router-A-Up(config)#interface g0/0/0
-    Router-A-Up(config-if)#no ip address
-    Router-A-Up(config-if)#no shutdown
-    Router-A-Up(config)#int g0/0/0.10
-    Router-A-Up(config-if)#encapsulation dot1q 10
-    Router-A-Up(config-if)#ip address 192.168.10.1 255.255.255.0
-    Router-A-Up(config)#int g0/0/0.20
-    Router-A-Up(config-if)#encapsulation dot1q 20
-    Router-A-Up(config-if)#ip address 192.168.20.1 255.255.255.0
+    Switch(config)#hostname Switch-A
+    Switch-A(config)vlan 10
+    Switch-A(config)#vlan 20
+    Switch-A(config)#interface g1/0/23
+    Switch-A(config-if)#switchport mode trunk
+    Switch-A(config)#interface g1/0/1
+    Switch-A(config-if)#switchport mode access
+    Switch-A(config-if)#switchport access vlan 10
+    Switch-A(config-if)#interface g1/0/2
+    Switch-A(config-if)#switchport mode access
+    Switch-A(config-if)#switchport access vlan 20
     ```],
   [],
 )
 
-== 验证&冗余 - 1.5min
+== VLAN验证1  - 1.5min
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+  [确认PC-A-Back能`ping`通`192.168.20.3`], [],
+  [确认PC-A-Back不能`ping`通`192.168.10.2`], [],
+  [确认PC-A-Back不能`ping`通`192.168.10.3`], [],
+)
+
+== 等待配置VLAN Trunk路由器 1min
+
+#table(
+  columns: (90%, 10%),
+  align: (left, center),
+  table.header[*操作*][*完成*],
+[在PC-A-Mid配置Switch-A```shell
+Switch1(config)#interface g1/0/24
+Switch1(config-if)#switchport mode trunk
+```],[]
+)
+
+== VLAN验证2 - 1.5min
 
 #table(
   columns: (90%, 10%),
@@ -78,16 +103,16 @@
 
 = RIP - 6min
 
-== 接线 - 1.5min
+== 接线 - 2.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [ 拔Console线：Switch-A <=/=> PC-A-Mid ], [],
-  [ 连接Console线：Router-A-Up <==> PC-A-Front ], [],
-  [ 连接Console线：Router-A-Down <==> PC-A-Back], [],
+  [连接Console线：Router-A-Down <==> PC-A-Back],[]
 )
+
+连接完成后请立刻开始配置Router，无需报告
 
 == 输入命令 - 3min
 
@@ -132,16 +157,10 @@
   align: (left, center),
   table.header[*操作*][*完成*],
   [在PC-A-Back配置Router-A-Down
-    ```shell
-    Router-A-Down(config)#ip nat inside source static 200.3.1.1 114.5.14.254
-    Router-A-Down(config)#ip nat inside source static 200.4.1.1 114.5.14.253
-    Router-A-Down(config)#interface s0/1/0
-    Router-A-Down(config-if)#ip nat inside
-    Router-A-Down(config)#interface s0/1/1
-    Router-A-Down(config-if)#ip nat outside
-    Router-A-Down(config-if)#exit
-    Router-A-Down#debug ip nat
-    ```],
+  ```
+Router-A-Down(config)#ip route 114.5.14.0 255.255.255.0 s0/1/1
+```
+  ],
   [],
 )
 
@@ -156,21 +175,14 @@
 )
 
 = ACL - 3min
+== 输命令
 
+== 验证&冗余 - 1.5min
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [在PC-A-Back配置Router-A-Down
-    ```shell
-    Router-A-Down(config)#access-list 100 deny icmp host 200.2.1.1 host 200.2.1.2
-    Router-A-Down(config)#access-list 100 permit ip any any
-    Router-A-Down(config)#interface s0/1/0
-    Router-A-Down(config-if)#ip access-group 100 in
-    ```],
-  [],
+  [确认Router-A-Down不能`ping`通`200.2.1.2`], [],
 )
-
-== 验证&冗余 - 1.5min
 
 

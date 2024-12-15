@@ -32,8 +32,8 @@
   table.header[*机柜A*][*用途*][*机柜B*][*用途*],
   [Switch-A], [Switch1], [Switch-B], [Switch2],
   [Router-A-Up], [VlanController], [Router-B-Up], [FinalRouter],
-  [Router-A-Mid], [TransRouter12], [Router-B-Mid], [-],
-  [Router-A-Down], [TransRouter23], [Router-B-Down], [OutsideRouter],
+  [Router-A-Mid], [-], [Router-B-Mid], [-],
+  [Router-A-Down], [TransRouter], [Router-B-Down], [OutsideRouter],
 )
 
 === PC
@@ -52,19 +52,19 @@
   columns: (20%, 30%, 50%),
   table.header[*人员*][*控制端*][*被控端*],
   [1A], [PC-A-Front], [Router-A-Up],
-  [2A], [PC-A-Mid], [Switch-A Router-A-Mid],
+  [2A], [PC-A-Mid], [Switch-A],
   [2A], [PC-A-Back], [Router-A-Down],
   [1B], [PC-B-Front], [Router-B-Up],
   [2B], [PC-B-Mid], [Switch-B],
   [2B], [PC-B-Back], [Router-B-Down],
 )
 
-= VLAN & Trunk - 12min
+= VLAN & Trunk - 10min
 
 - 设备只涉及VLAN相关部分，即
   1. Router-A-Up
   2. Switch-A Switch-B
-  3. PC-A-Front PC-A-Mid PC-A-Back PC-B-Front
+  3. PC-A-Front, PC-A-Mid, PC-A-Back, PC-B-Front, PC-B-Mid, PC-B-Back
 
 
 == 开机 准备直通线 - 2min
@@ -76,10 +76,10 @@
   [指挥、开启所有交换机、路由器、电脑], [M],
   [准备并组装5根Console线], [1A],
   [准备5根直通线、2根交叉线], [2A],
-  [准备并组装4组串口线], [1B 2B],
+  [准备并组装3组串口线], [1B 2B],
 )
 
-== 连接设备 - 2min
+== 连接设备 - 1min
 
 #table(
   columns: (80%, 20%),
@@ -95,42 +95,40 @@
   [
     - 连接直通线：Switch-A `g1/0/1` <==> PC-A-Front
     - 连接Console线：Router-A-Up <==> PC-A-Front
+    - 连接直通线：Switch-A `g1/0/2` <==> PC-A-Back
   ],
   [1A],
 
   [
     - 连接Console线：Switch-A <==> PC-A-Mid
-    - 连接直通线：Switch-A `g1/0/2` <==> PC-A-Back
+    - 立刻去初始化Switch-A
   ],
   [2A],
 
   [
     - 连接直通线：Switch-B `g1/0/1` <==> PC-B-Front
+    - 连接直通线：Switch-B `g1/0/2` <==> PC-B-Back
   ],
   [1B],
 
   [
     - 连接Console线：Switch-B <==> PC-B-Mid
-    - 连接直通线：Switch-B `g1/0/2` <==> PC-B-Back
+    - 立刻去初始化Switch-B
   ],
   [2B],
 )
 
-== 输入命令 - 2min
-
-- 此时Switch-A、Switch-B、Router-A-Up已经开机成功
-- 配置网络设备前须完成初始化操作，详见checklist
-
+== Switch初始化 1min
 #table(
   columns: (80%, 20%),
   align: (left, center),
   table.header[*操作*][*人员*],
   [指挥], [M],
-  [在 PC-A-Mid 初始化超级终端并配置 Switch-A], [2A],
-  [在 PC-B-Mid 初始化超级终端并配置 Switch-B], [2B],
+  [Switch-A 初始化], [2A],
+  [Switch-B 初始化], [2B],
 )
 
-== 初始化电脑 - 2min
+== 初始化电脑 & 配置VLAN - 2min
 
 此时电脑已经开机成功。
 
@@ -140,12 +138,14 @@
   table.header[*操作*][*人员*],
   [指挥], [M],
   [配置PC-A-Front 的 IP], [1A],
-  [配置PC-A-Back 的 IP], [2A],
+  [配置PC-A-Back 的 IP], [1A],
   [配置PC-B-Front 的 IP], [1B],
-  [配置PC-B-Back 的 IP], [2B],
+  [配置PC-B-Back 的 IP], [1B],
+  [配置Switch-A 的VLAN], [2A],
+  [配置Switch-B 的VLAN], [2B],
 )
 
-== 第一次验证 - 1min
+== 第一次验证 - 1.5min
 
 #table(
   columns: (80%, 20%),
@@ -227,7 +227,7 @@
 - 引入剩余设备
 - 无需对Switch和除PC-B-Mid以外的PC进行配置
 
-== 接线 - 1.5min
+== 接线 - 2.5min
 
 #table(
   columns: (80%, 20%),
@@ -240,15 +240,15 @@
   [M],
 
   [
-    1. 连接串口线：Router-A-Up `s0/1/0` <==> Router-A-Mid `s0/1/0`
-    2. 连接串口线：Router-A-Mid `s0/1/1` <==> Router-A-Down `s0/1/0`
+    1. 连接串口线：Router-A-Up `s0/1/1` <==> Router-A-Down `s0/1/0`
+    // 2. 连接串口线：Router-A-Mid `s0/1/1` <==> Router-A-Down `s0/1/0`
   ],
   [1A],
 
   [
-    1. 拔Console线：Switch-A <=/=> PC-A-Mid
-    2. 连接Console线：Router-A-Mid <==> PC-A-Mid
-    3. 连接Console线：Router-A-Down <==> PC-A-Back
+    // 1. 拔Console线：Switch-A <=/=> PC-A-Mid
+    // 2. 连接Console线：Router-A-Mid <==> PC-A-Mid
+    1. 连接Console线：Router-A-Down <==> PC-A-Back
 
   ],
   [2A],
@@ -256,13 +256,13 @@
   [
     1. 连接串口线：Router-A-Down `s0/1/1` <==> Router-B-Up `s0/1/0`
     2. 连接串口线：Router-B-Up `s0/1/1` <==> Router-B-Down `s0/1/0`
-    3. 连接交叉线：Router-B-Up `g0/0/0` <==> PC-B-Mid
+    3. 连接Console线：Router-B-Up <==> PC-B-Front
   ],
   [1B],
 
   [
     1. 拔Console线：Switch-B <=/=> PC-B-Mid
-    2. 连接Console线：Router-B-Up <==> PC-B-Front
+    2. 连接交叉线：Router-B-Up `g0/0/0` <==> PC-B-Mid
     3. 连接Console线：Router-B-Down <==> PC-B-Back
   ],
   [2B],
@@ -270,7 +270,7 @@
 
 == 输入命令 - 3min
 
-- 配置网络设备前须完成 Router-A-Mid、Router-A-Down、Router-B-Up、Router-B-Down 的初始化操作，详见checklist
+- 配置网络设备前须完成 Router-A-Down、Router-B-Up、Router-B-Down 的初始化操作，详见checklist
 
 #table(
   columns: (80%, 20%),
@@ -282,7 +282,6 @@
   ],
   [M],
 
-  [在 PC-A-Mid 初始化超级终端并配置 Router-A-Mid], [1A],
   [在 PC-A-Back 初始化超级终端并配置 Router-A-Down], [2A],
   [在 PC-B-Front 初始化超级终端并配置 Router-B-Up], [1B],
   [在 PC-B-Back 初始化超级终端并配置 Router-B-Down], [2B],
@@ -351,12 +350,15 @@
   align: (left, center),
   table.header[*操作*][*人员*],
   [指挥], [M],
-  [在 PC-A-Mid 上通过 Router-A-Mid
+  [在 PC-A-Back 上通过 Router-A-Down
     - 不能`ping`通`200.2.1.2`],
   [2A],
 
-  [在 PC-A-Back 上通过 Router-A-Down
-    - 能`ping`通`200.2.1.1`
-  ],
-  [2B],
+  // [在 PC-A-Back 上通过 Router-A-Down
+  //   - 能`ping`通`200.2.1.1`
+  // ],
+   [在 PC-A-Front 上通过 Router-A-Up
+     - 能`ping`通`200.2.1.2`
+   ],
+  [1A],
 )
