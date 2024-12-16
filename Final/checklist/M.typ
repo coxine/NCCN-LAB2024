@@ -133,7 +133,7 @@
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认2A完成], [],
+  [确认1B完成], [],
 )
 
 == 验证&冗余 - 1.5min
