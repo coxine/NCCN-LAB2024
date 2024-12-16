@@ -10,136 +10,128 @@
 
 #show: assignment_class.with(title, author, course_id, instructor, semester, due_time, id)
 
-= VLAN & Trunk
+= VLAN & Trunk - 10min
 
-== 开机 准备网线
+== 开机 准备线缆 - 2min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [1B 2B共同组装4组串口线], [],
+  [与1B共同准备并组装3组串口线], [],
 )
 
-== 连接设备
+
+== 连接设备 & 初始化 Switch - 2min
+
+- Switch的 `Console` 端口在外侧左上角
+
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
   [连接Console线：Switch-B <==> PC-B-Mid], [],
-  [连接直通线：Switch-B `g1/0/2` <==> PC-B-Back], [],
+  [在PC-B-Mid 初始化Switch-B，初始化完成，即输入`no`之后，立刻报告组长], [],
 )
 
-== 输命令
+== 配置Switch-B 的 VLAN - 2min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [在PC-B-Mid配置SwitchB
+  [
     ```shell
-    Switch(config)#hostname Switch-B
-    Switch-B(config)#vlan 10
-    Switch-B(config)#vlan 20
-    Switch-B(config)#interface g1/0/23
-    Switch-B(config-if)#switchport mode trunk
-    Switch-B(config)#interface g1/0/1
-    Switch-B(config-if)#switchport mode access
-    Switch-B(config-if)#switchport access vlan 10
-    Switch-B(config-if)#interface g1/0/2
-    Switch-B(config-if)#switchport mode access
-    Switch-B(config-if)#switchport access vlan 20
-    Switch-B(config)#interface g1/0/24
-    Switch-B(config-if)#switchport mode trunk
+    # 在PC-B-Mid配置Switch-B
+    Switch> enable
+    Switch# conf t
+    Switch(config)# hostname Switch-B
+    Switch-B(config)# vlan 10
+    Switch-B(config)# vlan 20
+    Switch-B(config)# int g1/0/23
+    Switch-B(config-if)# sw mod tr
+    Switch-B(config)# int g1/0/1
+    Switch-B(config-if)# sw mod acc
+    Switch-B(config-if)# sw acc vl 10
+    Switch-B(config-if)# int g1/0/2
+    Switch-B(config-if)# sw mod acc
+    Switch-B(config-if)# sw acc vl 20
     ```],
   [],
 )
 
-== 初始化电脑
+== VLAN验证1 - 1.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认PC-B-Back 超级终端打开并成功显示], [],
-  [确认PC-B-Back IP为`192.168.20.3`], [],
-  [确认PC-B-Back 子网掩码为`255.255.255.0`], [],
-  [确认PC-B-Back 网关为`192.168.20.1`], [],
+  [确认PC-B-Back能`ping`通`192.168.20.2`], [],
+  [确认PC-B-Back不能`ping`通`192.168.10.2` `192.168.10.3`], [],
 )
 
-== 第一次验证
+== 配置 Trunk路由器 1min
+
+== VLAN验证2 - 1.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认PC-B-Back 能`ping`通`192.168.20.2`], [],
-  [确认PC-B-Back 不能`ping`通`192.168.10.2`], [],
-  [确认PC-B-Back 不能`ping`通`192.168.10.3`], [],
+  [确认PC-B-Back能`ping`通`192.168.10.2` `192.168.10.3` `192.168.20.2`], [],
 )
 
-== 配置Trunk
+= RIP - 6min
 
-== 验证&冗余
+- Router的 `Console` 端口在外侧左下角
 
-#table(
-  columns: (90%, 10%),
-  align: (left, center),
-  table.header[*操作*][*完成*],
-  [确认PC-B-Back 能`ping`通`192.168.20.2`], [],
-  [确认PC-B-Back 能`ping`通`192.168.10.2`], [],
-  [确认PC-B-Back 能`ping`通`192.168.10.3`], [],
-)
-
-= RIP
-
-== 接线
+== 接线 - 2.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [拔Console线：Switch-B <=/=> PC-B-Mid], [],
-  [连接Console线：Router-B-Up <==> PC-B-Front], [],
   [连接Console线：Router-B-Down <==> PC-B-Back], [],
 )
 
-== 输命令
+== 输入命令 - 3min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [在PC-B-Back配置Router-B-Down
+  [
     ```shell
-    Router(config)#hostname Router-B-Down
-    Router-B-Down(config)#interface s0/1/0
-    Router-B-Down(config-if)#ip address 114.5.114.1
-    Router-B-Down(config-if)#no shutdown
+    # 在PC-B-Back配置Router-B-Down
+    Router> enable
+    Router# conf t
+    Router(config)# no ip domain-lookup
+    Router(config)# hostname Router-B-Down
+    Router-B-Down(config)# interface s0/1/0
+    Router-B-Down(config-if)# ip address 114.5.114.1
+    Router-B-Down(config-if)# no shutdown
     ```
   ],
   [],
 )
 
-== 验证&冗余
 
+== 验证&冗余 - 1.5min
 
-= NAT
+= NAT - 3min
 
-== 输命令
+== 输命令 - 1.5min
 
-
-== 验证&冗余
+== 验证&冗余 - 1.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [在PC-B-Back 上确认Router-B-Down能`ping`通`114.5.14.254`], [],
-  [在PC-B-Back 上确认Router-B-Down能`ping`通`114.5.14.253`], [],
+  [在 PC-B-Back 上通过 Router-B-Down 能`ping`通`114.5.14.254` `114.5.14.253`], [],
 )
 
-= ACL
+= ACL - 3min
 
 
