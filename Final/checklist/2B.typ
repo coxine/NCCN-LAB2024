@@ -108,16 +108,16 @@
     Router# conf t
     Router(config)# no ip domain-lookup
     Router(config)# hostname Router-B-Down
-    Router-B-Down(config)# interface s0/1/0
-    Router-B-Down(config-if)# ip address 114.5.114.1
-    Router-B-Down(config-if)# no shutdown
+    Router-B-Down(config)# int s0/1/0
+    Router-B-Down(config-if)# ip addr 114.5.114.1 255.255.255.0
+    Router-B-Down(config-if)# no sh
     ```
   ],
   [],
 )
 
 
-== 验证&冗余 - 1.5min
+== 验证&冗余 - 0.5min
 
 = NAT - 3min
 

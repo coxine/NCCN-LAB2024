@@ -135,14 +135,12 @@
   [],
 )
 
-== 验证&冗余 - 1.5min
+== 验证&冗余 - 0.5min
 
 #table(
   columns: (90%, 10%),
   align: (left, center),
   table.header[*操作*][*完成*],
-  [确认Router-A-Down能`ping`通`200.1.1.2`], [],
-  [确认Router-A-Down能`ping`通`200.3.1.2`], [],
   [确认PC-A-Back能`ping`通`200.3.1.2`], [],
 )
 
