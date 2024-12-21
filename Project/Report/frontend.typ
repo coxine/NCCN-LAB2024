@@ -16,12 +16,6 @@
 
 == 界面展示
 
-登入界面：#image("login.png")
-首页：#image("main.png")
-收藏书架：#image("favorite.png")
-个人主页：#image("homepage.png")
-书籍详细：#image("bookdetail.png")
-阅读器：#image("reader.png")
 
 == 功能介绍
 
