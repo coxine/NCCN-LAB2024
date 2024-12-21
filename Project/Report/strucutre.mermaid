@@ -1,0 +1,25 @@
+graph TD
+    subgraph GitHub
+        A1[前端代码仓库] 
+        A2[后端代码仓库]
+    end
+    
+    subgraph 微信服务器
+        B[小程序前端] <--> C[云函数]
+    end
+
+    subgraph Cloudflare
+       G[防火墙] <-->  F[CDN]
+    end
+
+    subgraph 云主机
+        H[nginx] <-->D[Spring Boot服务] <--> E[MySQL]
+    end
+
+    A1 --> B
+
+    A2 --> | Github Actions | D
+
+    C <--> G
+
+    F<-->H

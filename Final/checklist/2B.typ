@@ -109,7 +109,7 @@
     Router(config)# no ip domain-lookup
     Router(config)# hostname Router-B-Down
     Router-B-Down(config)# int s0/1/0
-    Router-B-Down(config-if)# ip addr 114.5.114.1 255.255.255.0
+    Router-B-Down(config-if)# ip addr 114.5.14.1 255.255.255.0
     Router-B-Down(config-if)# no sh
     ```
   ],

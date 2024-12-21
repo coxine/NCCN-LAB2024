@@ -23,6 +23,8 @@
 
 == 连接设备 & 初始化 Switch - 2min
 
+- Switch的 `Console` 端口在外侧左上角
+
 #table(
   columns: (90%, 10%),
   align: (left, center),
@@ -32,9 +34,6 @@
 )
 
 == 初始化电脑 & 配置 VLAN - 2min
-
-- Switch的 `Console` 端口在外侧左上角
-
 
 #table(
   columns: (90%, 10%),
