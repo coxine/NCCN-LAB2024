@@ -16,6 +16,8 @@
 
 = 主要功能点
 
+TODO
+
 == 首页
 
 #align(center)[
@@ -60,9 +62,80 @@
 
 个人主页展示了用户的用户名以及个人签名。用户可以在“修改个人信息”一栏进行用户名和个人签名的修改。同时用户也可以点击“致谢”和“应用信息”查看相关信息。
 
-= 前端实现
 
-= 后端实现
+= 后端接口
+
+后端提供了一组可靠的HTTP API接口，来处理前端对应用相关数据的请求和为数据持久化保存的请求，从而为客户端提供稳定、便捷的服务。具体地，在该业务场景下提供如下功能：
+
++ 保存和获取书籍的相关信息，包括：
+  + 全部书籍列表及概要
+  + 书籍目录
+  + 章节具体内容
+  + 书籍封面图片
+  + 书籍评论
++ 处理用户的登录和操作请求，包括：
+  + 处理用户登录
+  + 处理用户提交书评
+  + 处理用户增加/取消收藏书籍
++ 保存和获取用户在该应用保存的的相关信息，包括：
+  + 获取和修改用户信息
+
+== 接口列表及功能
+
+下文中出现的`$(URL)`字样均指的是后端接口地址：#link("https://read-back.cos.tg")，
+
+该部分仅对API简单概述，更多信息请参阅#link("http://ed.cos.tg")[后端文档]。
+
+#table(
+  columns: (5%, 40%, 7%, 48%),
+  align: (center, center, center, center),
+  table.header[编号][*URL*][*请求类型*][*功能概述*],
+  [1], [`$(URL)/book/list`], [`GET`], [获取全部书籍列表及书籍概况],
+  [2], [`$(URL)/book/content/$(bookID)`], [`GET`], [获取某本书的目录],
+  [3], [`$(URL)/book/chapter/$(bookID)/$(chapterID)`], [`GET`], [获取特定章节具体内容],
+  [4], [`$(URL)/book/chapter/json/$(bookID)/$(chapterID)`], [`GET`], [获取特定章节具体内容，并附带章节名称],
+  [5], [`$(URL)/book/cover/$(bookID)`], [`GET`], [获取书籍封面],
+  [6], [`$(URL)/book/comment/$(bookID)`], [`GET`], [获取书籍评论],
+  [7], [`$(URL)/user/coment`], [`POST`], [提交用户对书籍的评论],
+  [8], [`$(URL)/user/profile`], [`POST`], [获取当前登录信息的用户信息],
+  [9], [`$(URL)/user/profile/$(id)`], [`GET`], [已知目标用户的用户 ID 时获取用户信息],
+  [10], [`$(URL)/user/avatar/$(id)`], [`GET`], [获取用户头像],
+  [11], [`$(URL)/user/favorite`], [`POST`], [提交用户收藏书籍请求],
+  [12], [`$(URL)/user/update`], [`POST`], [提交用户修改个人信息请求],
+)
+
+
+== 实现方案
+
+后端采用JAVA Spring Boot框架 + MySQL数据库的方案。
+
+=== 数据库操作
+
+涉及数据库增删改查相关的API采用Spring Boot框架提供的能力得到实现，遵循如下框架：
+
+#align(center)[
+  #image("./img/ed_structure.png", height: 280pt, width: 200pt)
+]
+
+请求来到后端，经历如下过程：
++ 先由`Controller`类进行事件分发，调用`Service`类对应的方法来处理。
++ `Service`类处理的过程中调用`Repository`类。
++ `Repository`类与数据库进行交互，将得到的数据返回给`Service`类。
++ `Service`类经过处理后返回给`Controller`类。
++ `Controller`类将数据转换成 JSON 对象返回给前端。
+
+
+图片和章节的`GET`请求通过Spring Boot框架提供的OSS挂载到静态URL上，由`Controller`分发到具体的图片资源，没有`Service`类和`Repository`类。
+
+数据库结构请参阅#link("http://ed.cos.tg")[后端文档]。
+
+=== 静态资源请求
+
+图片和章节的具体内容等静态资源挂载到特定URL上，前端通过`GET`请求获取。同时使用Cloudflare进行CDN加速，提高访问速度，缓解服务器压力。
+
+=== 用户登录
+
+用户的一键登录基于微信提供的API实现。
 
 #pagebreak()
 
@@ -72,17 +145,17 @@
 
 #align(
   center,
-  image("strucutre.svg", height: 80%, alt: "架构图"),
+  image("./img/strucutre.png", height: 80%, alt: "架构图"),
 )
 
 
 == 前端
 
-前端代码通过微信开发者工具内置的上传功能，上传并部署于微信服务器上。前端通过云函数转发请求至后端。
+前端代码通过微信开发者工具内置的上传功能，进行编译、打包并部署于微信服务器上。前端通过云函数转发请求至后端。
 
 == 后端
 
-后端代码部署在*AWS*上的 *Elastic Compute Cloud* 服务器上，通过*Nginx*进行反向代理。
+后端Spring Boot服务部署在*AWS*上的 *Elastic Compute Cloud* 服务器上，通过*Nginx*进行反向代理。
 
 后端服务使用域名#link("https://read-back.cos.tg")，通过*Cloudflare*配置DNS和CDN，流量经过Cloudflare代理，使用Cloudflare签发的证书进行SSL加密。
 
@@ -115,7 +188,7 @@ SQL服务部署在*AWS*上的 *Elastic Compute Cloud* 服务器上。
 #cprob()[
   服务器宕机频率高
 ][
-  通过排查Cloudflare、Nginx、SpringBoot的日志，发现大量恶意请求和服务器的内存瓶颈导致了CPU占用100%后宕机，通过
+  通过排查Cloudflare、Nginx、Spring Boot的日志，发现大量恶意请求和服务器的内存瓶颈导致了CPU占用100%后宕机，通过
 
   - 配置Cloudflare的防火墙和异常拦截
   - 在Nginx上限制非Cloudflare请求
