@@ -50,7 +50,6 @@
 
 = 网络拓扑
 
-
 #image("./Final.png")
 
 = 实验步骤
@@ -68,7 +67,7 @@
   [PC4], [200.3.1.2], [255.255.255.0], [200.3.1.1],
 )
 
-== 配置交换机 VLAN
+== 配置交换机 VLAN并验证
 
 === Switch1
 
@@ -99,13 +98,13 @@ Switch2(config-if)#interface g1/0/2
 Switch2(config-if)#switchport mode access
 Switch2(config-if)#switchport access vlan 20
 ```
-== 验证VLAN 配置情况
+=== 验证VLAN 配置情况
 
 - VLAN10PC1、VLAN10PC2可`ping`通。
 - VLAN20PC1、VLAN20PC2可`ping`通。
 - 分属VLAN10和VLAN20的PC不可`ping`通。
 
-== 配置VLAN Trunk
+== 配置VLAN Trunk 并验证
 
 === Switch1
 
@@ -128,12 +127,12 @@ VlanController(config-if)#encapsulation dot1q 20
 VlanController(config-if)#ip address 192.168.20.1 255.255.255.0
 ```
 
-== 验证VLAN 连通情况
+=== 验证VLAN 连通情况
 
 - VLAN10PC1、VLAN10PC2、VLAN20PC1、VLAN20PC2均可`ping`通。
 
 
-== 配置路由器 RIP
+== 配置路由器 RIP 并验证
 
 === VlanController
 
@@ -186,12 +185,12 @@ OutsideRouter(config-if)#ip address 114.5.114.1
 OutsideRouter(config-if)#no shutdown
 ```
 
-== 验证RIP配置情况
+=== 验证RIP配置情况
 
 - 除了OutsideRouter以外的各台设备均可`ping`通。
 - 此处取最长链路，VLAN20PC1 `ping`PC4来验证联通性。
 
-== 配置NAT
+== 配置NAT并验证
 
 === FinalRouter
 
@@ -214,13 +213,13 @@ FinalRouter#debug ip nat
 TransRouter(config)#ip route 114.5.14.0 255.255.255.0 s0/1/1
 ```
 
-== 验证 NAT 配置情况
+=== 验证 NAT 配置情况
 
 - TransRouter可以`ping`通OutsideRouter`114.5.14.1`。
 - OutsideRouter可以`ping`通TransRouter的NAT地址`114.5.14.254`。
 - OutsideRouter可以`ping`通PC4的NAT地址`114.5.14.253`。
 
-== 配置ACL
+== 配置ACL并验证
 
 === FinalRouter
 
@@ -231,10 +230,20 @@ FinalRouter(config)#interface s0/1/0
 FinalRouter(config-if)#ip access-group 100 in
 ```
 
-== 验证ACL 配置情况
+=== 验证ACL 配置情况
 
 - TransRouter不可以`ping`通FinalRouter`200.2.1.2`。但是可以`ping`通除此之外的所有设备。
 - 其余设备不受影响。
 
 
 = 实验总结
+
+本次实验通过配置网络拓扑，深入了解了VLAN、Trunk、RIP路由协议、NAT技术和ACL防火墙等关键网络技术。通过以下几个方面的配置和验证，达成了实验的目标：
+
+1. VLAN与Trunk技术：通过配置交换机的VLAN与Trunk端口，实现了不同VLAN之间的隔离与数据传输，同时也通过配置VLAN Trunk使得多台交换机之间能够正确传输VLAN数据，保证了网络拓扑的合理性和稳定性。
+2. RIP路由协议：通过配置RIP协议在路由器之间的路由信息传播，实现了不同网络之间的互联互通。验证过程中，除OutsideRouter外的各台设备之间的联通性正常，确保了路由协议配置的成功。
+3. NAT技术：通过配置静态NAT，将内部网络地址映射到公网地址，使得内网设备能够通过外网进行通信。通过验证NAT配置，确保了外部网络能够访问内部网络，保证了网络的正常访问。
+4. ACL配置：通过配置访问控制列表（ACL），成功阻止了TransRouter访问FinalRouter，增强了网络安全性。其他设备的网络访问不受影响，验证了ACL的有效性。
+5. 设备配置与故障排查：在实验过程中，通过不断验证和排查，确保了设备配置的正确性和网络的正常连通性。
+
+通过本次实验，增强了我们对网络设备配置的理解和操作能力，也提升了对复杂网络问题的排查与解决能力，是对我们一学期以来计算机网络知识的成功总结和检验。
