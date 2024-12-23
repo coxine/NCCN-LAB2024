@@ -114,7 +114,7 @@
 涉及数据库增删改查相关的API采用Spring Boot框架提供的能力得到实现，遵循如下框架：
 
 #align(center)[
-  #image("./img/ed_structure.png")
+  #image("./img/ed_structure.png", height: 70%, alt: "后端架构")
 ]
 
 请求来到后端，经历如下过程：

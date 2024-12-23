@@ -1,33 +1,15 @@
 graph TD
-    A[GET] --> B[后端服务]
-    C[POST] --> B[后端服务]
+    A[GET] --> D
+    C[POST] --> D
     
-    B<-->D
-    B<-->E
-    B<-->F
-    B<-->G
+   D[<b>Controller 类</b><br><code>BookController</code><br><code>FavoritesController</code><br><code>HomeController</code><br><code>UserController</code><br><code>UserProfileController</code>]
+   D<-->E[<b>Service 类</b><br><code>BookService</code><br><code>FavoritesService</code><br><code>UserService</code><br><code>UserProfileService</code>]
+   E<-->F[<b>Repository 类</b><br><code>BookRepository</code><br><code>FavoritesRepository</code><br><code>UserRepository</code><br><code>UserProfileRepository</code><br>……]
+
+	subgraph 后端服务
+	D
+	E
+	F
+	end
     
-    subgraph Controller 类
-    D[BookController]
-    E[FavoritesController]
-    F[HomeController]
-    G[UserProfileController]
-    end
-    D[BookController] <--> H[BookService]
-    E[FavoritesController] <--> I[FavoritesService]
-    F[HomeController] <--> J[UserService]
-    G[UserProfileController] <--> K[UserProfileService]
-    
-    subgraph Service 类
-     H[BookService]
-     I[FavoritesService]
-     J[UserService]
-     K[UserProfileService]
-    end
-    
-    H[BookService] <--> L[Repository 类]
-    I[FavoritesService] <--> L[Repository 类]
-    J[UserService] <--> L[Repository 类]
-    K[UserProfileService] <--> L[Repository 类]
-    
-    L[Repository 类] <--> M[(MySQL)]
+    F <--> M[(MySQL)]
