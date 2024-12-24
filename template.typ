@@ -12,6 +12,7 @@
 
 #let prob_block(body) = {
   v(-0.5em)
+  set par(first-line-indent: 0em)
   block(fill: rgb(250, 255, 250), width: 100%, inset: 8pt, radius: 4pt, stroke: rgb(31, 199, 31), body)
 }
 
@@ -231,10 +232,14 @@
   )[#grid(columns: (1em, 1fr), align: (
         right,
         left,
-      ), column-gutter: 0.7em, row-gutter: 0.6em, ..it.lines.enumerate().map(((i, line)) => (
-        style-number(i + 1),
-        line,
-      )).flatten())]
+      ), column-gutter: 0.7em, row-gutter: 0.6em, ..it
+        .lines
+        .enumerate()
+        .map(((i, line)) => (
+          style-number(i + 1),
+          line,
+        ))
+        .flatten())]
 
 
   set par(first-line-indent: 2em)

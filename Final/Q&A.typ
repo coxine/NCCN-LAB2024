@@ -1,6 +1,6 @@
 #import "../template.typ": *
 
-#let title = "期末问答 2024"
+#let title = "期末问答模拟 2024"
 #let author = "第7组"
 #let course_id = "互联网计算"
 #let instructor = "刘峰老师"
@@ -12,95 +12,133 @@
 
 = 基础知识
 
-#cprob()[简述实验的拓扑形状][
-  // 在这里写下你的回答
-  由两台交换机,4台PC(PC-A/B-Front/Back),1台路由器(Router-A-Up )构成VLAN间路由\
-  由三台路由器(包含VLAN间路由的那一台Router-A-Up + Router-A-Down + Router-B-Up)使用动态RIP构成一个小网络\
-  再由一台新的路由器(Router-B-Down )和前面参与了RIP但是没参与VLAN间路由的两台路由器( Router-A-Down + Router-B-Up )+一台新的PC(PC-B-Mid)一起完成NAT网络地址转换
+#cprob()[简述实验的拓扑形状及设备数量][
+  #image("Final.png")
+
+  #table(
+    columns: (20%, 40%, 20%, 20%),
+    table.header[*实验项目*][*路由器*][*交换机*][*PC*],
+    [VLAN间路由], [1 (A-Up)], [2], [4],
+    [RIP], [3 (A-Up, A-Down, B-Up)], [0], [5],
+    [NAT], [2 (B-Up B-Down)], [0], [1 (B-Mid)],
+    [ACL], [2 (A-Down, B-Up)], [0], [0],
+    [*合计*], [4], [2], [5],
+  )
 ]
 
-#cprob()[简述实验的设备数量及位置][
-  // 照葫芦画瓢，参考实验中的拓扑
-  2台交换机,5台PC,4台路由器\
-  位置参考前一问
-]
 
 #cprob()[简述各种线的差别][
-串口线(深蓝色):在本实验中用于路由器之间的连接\
-翻转串口线(浅蓝色):接在console口上,用于连接PC与路由器/交换机来对路由器/交换机通过超级终端进行控制\
-直通线(黄色):网线,在本实验中用于连接交换机和PC/路由器\
-交叉线(紫色):网线,在本实验中用于连接两个交换机以及在NAT中连接PC-B-Mid和Router-B-Up
+  #table(
+    columns: (20%, 20%, 60%),
+    table.header[*种类*][*颜色*][*用途*],
+    [串口线], [深蓝色], [连接路由器],
+    [翻转串口线], [浅蓝色], [接在Console口上，用于PC控制路由器/交换机],
+    [直通线], [黄色], [网线，连接交换机和PC/路由器],
+    [交叉线], [紫色], [网线，连接两个交换机以及PC和Router],
+  )
+  注：交叉线和直通线已不作区分，均可自动识别
 ]
 
 #cprob()[简述`ping`的概念][
-ping 是一种网络工具，用于测试网络连接的可达性和延迟。\
-它通过向目标主机发送 ICMP（Internet Control Message Protocol，互联网控制消息协议）回显请求，\
-目标主机收到请求后，会返回一个 ICMP 回显应答数据包。`ping` 工具会记录发送请求和接收应答的时间。\
-`ping` 会计算从发送请求到接收应答所需的时间（往返时间，RTT），并显示结果。
+  - 网络工具：测试网络连接的可达性和延迟
+  - 协议：ICMP
+  - 向目标主机发送 ICMP 回显请求，目标主机收到请求后，返回 ICMP 回显应答数据包
+  - `ping` 工具会记录发送请求和接收应答的时间，并显示结果
 ]
 
 = 路由
 
 #cprob()[简述动态路由的作用][
-  // 简明扼要
-  本实验中采用的动态路由协议为RIP
-  动态路由能够自动检测网络拓扑的变化（如路由器故障、链路中断等），并自动更新路由表
+  - 动态路由的作用：自动检测网络拓扑的变化（如路由器故障、链路中断等），更新路由表
+  - RIP：Distance Vector 路由协议（基于跳数），最多 15 跳
 ]
 
 #cprob()[简述实验中具体如何动态路由][
-  // 照葫芦画瓢，参考实验中的拓扑
-  给Router-A-Up分配3个IP网段: 192.168.10.0, 192.168.20.0, 200.1.1.0\
-  给Router-A-Down分配2个IP网段: 200.1.1.0, 200.2.1.0\
-  给Router-B-Up分配2个IP网段: 200.2.1.0, 200.3.1.0
+  #table(
+    columns: (30%, 70%),
+    table.header[*路由器*][*分配的IP网段*],
+    [Router-A-Up], [`192.168.10.0`, `192.168.20.0`, `200.1.1.0`],
+    [Router-A-Down], [`200.1.1.0`, `200.2.1.0`],
+    [Router-B-Up], [`200.2.1.0`,`200.3.1.0`],
+  )
 ]
 
 #cprob()[在路由器上输入`show ip route` 解释输出][
-  // 在 Packet Tracer 中输入 show ip route 命令，把输出贴在下面，同时解释各种含义（包括C S L R O等）
+  ```shell
+  C    200.1.1.0/24 is directly connected, Serial2/0
+  # C 开头表示直连路由 即通过Serial2/0接口连接到`200.1.1.0/24`
+  # 对应 `ip address` 命令配置的地址
+  R    200.2.1.0/24 [120/1] via 200.1.1.2, 00:00:17, Serial2/0
+  # R 开头表示 RIP 上文即通过Serial2/0接口学习到的，通过`200.1.1.2`连接`200.2.1.0/24`
+  # 对应`network`命令配置的地址
+  # 120/1 表示距离/度量值
+  ```
 ]
 
 = VLAN
 
 #cprob()[简述VLAN的作用][
-  // 简明扼要
-  不同的 Vlan 相互隔离广播域，因此，传统的以太网 ARP 方式的通信机制在这里是不可用的，需要在网络中添加三层设备（本实验中为路由器Router-A-Up）来实现VLAN间路由。
+  - 作用：隔离广播域，提高网络安全性
+  - 联通不同VLAN：需要三层设备（路由器）来实现VLAN间路由
 ]
 
 #cprob()[简述VLAN中子网的划分以及子网间如何连通][
-  // 照葫芦画瓢，参考实验中的拓扑
-  Switch划分两个VLAN，VLAN 10和VLAN 20，\
-  PC中,front的两台在VLAN 10下,back的两台在VLAN 20下,\
-  Router-A-Up在 g0/0/0划分两个子接口 g0/0/0.10和 g0/0/0.20,并分别作为VLAN 10 和VLAN 20的网关\
-  Switch间为Trunk链路,Switch-A连接Router-A-up的接口为Trunk接口
+  #table(
+    columns: (20%, 40%, 40%),
+    table.header[*项目*][*VLAN 10*][*VLAN 20*],
+    [PC], [A-Front B-Front], [A-Back B-Back],
+    [IP], [`192.168.10.0/24`], [`192.168.20.0/24`],
+    [网关], [Router-A-Up `g0/0/0.10`], [Router-A-Up `g0/0/0.20`],
+  )
+  Switch间为Trunk链路，Switch-A连接Router-A-Up的接口为Trunk接口
 ]
 
 #cprob()[简述VLAN中的Trunk技术][
-  // 简明扼要
-  Trunk端口通过在数据帧中添加VLAN标签来区分不同VLAN的数据
+  Trunk端口通过*在数据帧中添加VLAN标签*来区分不同VLAN的数据
 ]
 
 = NAT & ACL
 
 #cprob()[简述NAT的作用][
-  // 简明扼要
-  在计算机网络中转换IP地址,允许多个设备共享一个公共IP地址
+  转换内/公网IP地址，允许内网多个设备共享一个公网IP
 ]
 
 #cprob()[验证实验中的NAT是有效的][
-  // 一个是`show ip nat translations`，一个是执行`ping`命令，看是否成功
+  在Router-B-Up上执行命令，查看NAT转换表：
+  ```shell
+  FinalRouter>show ip nat trans
+  Pro  Inside global     Inside local       Outside local      Outside global
+  ---  114.5.14.253      200.4.1.1          ---                ---
+  ---  114.5.14.254      200.3.1.1          ---                ---
+  ```
+
+  执行`ping`命令：
+  - 在 PC-A-Back 上通过 Router-A-Down 能`ping`通`114.5.14.1`
+  - 在 PC-B-Back 上通过 Router-B-Down 能`ping`通`114.5.14.254` `114.5.14.253`
 ]
 
 #cprob()[简述ACL的作用][
-  // 简明扼要
-  ACL可以允许或拒绝特定类型的流量\
-  在本实验中,ACL封杀了Router-A-Down到Router-B-Up的命令
+  允许/拒绝特定类型的流量
+
+  在本实验中，ACL封杀了Router-A-Down到Router-B-Up的`ping`命令
 ]
 
 #cprob()[验证实验中的ACL是有效的][
-  // 一个是`show ip access-list`，一个是执行`ping`命令，看是否失败
+  在Router-B-Up上执行命令，查看ACL：
+  ```shell
+  FinalRouter> enable
+  FinalRouter# show ip access-list
+  Extended IP access list 100
+      10 deny icmp host 200.2.1.1 host 200.2.1.2
+      20 permit ip any any (33 match(es))
+  ```
+  执行`ping`命令：
+  - 在 PC-A-Back 上通过 Router-A-Down 不能`ping`通`200.2.1.2`
 ]
 
 #cprob()[简述ACL中的 Access-list number][
-  // 列张表，参考ppt
+  - 1-99：标准ACL，仅根据源地址匹配
+  - 100-199：扩展ACL，根据源地址、目的地址、协议、端口匹配
 ]
 
 
