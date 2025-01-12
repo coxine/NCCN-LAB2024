@@ -1,8 +1,19 @@
 # NCCN-LAB2024
 
-- 国立中央计网小组 实验仓库
-- National Central Computer Network
-- 感谢[电子实验文档网站](https://pub.ydjsir.com.cn/)
+- 本仓库是国立中央计网小队的实验报告和大作业文档仓库。结课后，小组成员一致同意将本文档开源，供学弟学妹们参考。
+- 让我们向以下小组成员表示感谢：华振翔、林桂超、王涵、张家浩、张屹峰
+- 此外我们还要感谢软院学长制作的[电子实验文档网站](https://pub.ydjsir.com.cn/)
+
+## Typst 相关
+
+仓库内文档使用 Typst 编写，如需编译成 PDF 请安装以下环境。
+
+- [环境](https://github.com/typst-community/typst-install)
+- VSC插件
+  - [Tinymist Typst](https://marketplace.visualstudio.com/items?itemName=myriad-dreamin.tinymist)
+  - [Typst Companion](https://marketplace.visualstudio.com/items?itemName=CalebFiggers.typst-companion)（选装 增加部分快捷键）
+
+---
 
 ## 时间节点
 
@@ -35,13 +46,6 @@
   答案
 ]
 ```
-
-## Typst 相关
-
-- [环境](https://github.com/typst-community/typst-install)
-- VSC插件
-  - [Tinymist Typst](https://marketplace.visualstudio.com/items?itemName=myriad-dreamin.tinymist)
-  - [Typst Companion](https://marketplace.visualstudio.com/items?itemName=CalebFiggers.typst-companion)（选装 增加部分快捷键）
 
 ## 分工
 
